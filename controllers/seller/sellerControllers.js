@@ -32,9 +32,9 @@ const sellerController = {
   },
 
   login: async (req, res) => {
-    const { email, password } = req.body;
+    const { phone, password } = req.body;
     try {
-      const seller = await Seller.findOne({ where: { email } });
+      const seller = await Seller.findOne({ where: { phone } });
       if (!seller) {
         return sendResponse(res, 401, 'Invalid credentials');
       }
