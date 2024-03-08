@@ -80,8 +80,7 @@ const sellerController = {
   getProfile: async (req, res) => {
     try {
       const seller = await Seller.findByPk(req.id);
-      console.log(seller)
-      console.log(req.id)
+      
       if (!seller) {
         return sendResponse(res, 404, false, 'Seller not found');
       }
