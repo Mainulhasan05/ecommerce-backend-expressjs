@@ -14,6 +14,18 @@ const sellerController = {
     if(!name||!phone||!password){
       return sendResponse(res, 400, false, 'All fields are required');
     }
+    if(!/^\d+$/.test(phone)){
+      return sendResponse(res, 400, false, 'Phone number must be digits');
+    }
+    if(name.length<3){
+      return sendResponse(res, 400, false, 'Name must be at least 3 characters');
+    }
+    if(password.length<5){
+      return sendResponse(res, 400, false, 'Password must be at least 6 characters');
+    }
+    if (phone.length !== 11) {
+      return sendResponse(res, 400, false, 'Phone number must be 11 digits');
+    }
     try {
       let seller = await Seller.findOne({ where: { phone } });
       if (seller) {
