@@ -4,6 +4,7 @@ const cors = require('cors');
 require('dotenv').config(); // Load environment variables from .env file
 const db=require('./db_config/db');
 const sellerRoutes=require('./routes/seller/sellerRoutes');
+const categoryRoutes=require('./routes/seller/categoryRoutes');
 
 db.sync({alter:true})
   .then(() => {
@@ -20,6 +21,7 @@ const port = process.env.PORT || 3000; // Port number for the server to listen o
 app.use(express.json()); // Middleware to parse JSON requests
 app.use(cors()); // Middleware to handle CORS issues
 app.use("/seller",sellerRoutes);
+app.use("/seller/category",categoryRoutes);
 
 
 // Define a route
