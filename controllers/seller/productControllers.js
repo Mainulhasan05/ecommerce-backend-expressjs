@@ -3,7 +3,7 @@ const Inventory = require('../../models/seller/inventoryModel');
 
 const productController = {
   createProduct: async (req, res) => {
-    const { name, description, price, quantity, categoryId } = req.body;
+    const { name, description, price, quantity, categoryId,image } = req.body;
     const sellerId = req.id; // Assuming sellerId is available in req.id
 
     try {

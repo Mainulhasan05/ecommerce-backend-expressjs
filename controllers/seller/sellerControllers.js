@@ -79,7 +79,9 @@ const sellerController = {
 
   getProfile: async (req, res) => {
     try {
-      const seller = await Seller.findByPk(req.id);
+      const seller = await Seller.findByPk(req.id,{
+        attributes: { exclude: ['password','activity','accountStatus'] }
+      });
       
       if (!seller) {
         return sendResponse(res, 404, false, 'Seller not found');

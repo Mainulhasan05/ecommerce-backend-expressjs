@@ -33,7 +33,10 @@ const createCategory = async (req, res) => {
 // Get all categories
 const getAllCategories = async (req, res) => {
   try {
+    const { pageNumber } = req.params;
+    const page = pageNumber || 0;
     const categories = await Category.findAll({
+        offset: 10 * page,
         limit: 10,
         order: [['createdAt', 'DESC']]
         
@@ -94,6 +97,8 @@ const deleteCategoryById = async (req, res) => {
     sendResponse(res, 500, false, 'Server Error', null);
   }
 };
+
+
 
 module.exports = {
   createCategory,
