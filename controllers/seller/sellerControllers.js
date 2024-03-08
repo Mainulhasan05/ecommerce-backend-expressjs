@@ -5,6 +5,7 @@ const sendResponse=require('../../utils/sendResponse');
 
 
 const generateToken = (seller) => {
+  
   return jwt.sign({ id: seller.id, phone: seller.phone }, process.env.JWT_SECRET, { expiresIn: '10d' });
 };
 

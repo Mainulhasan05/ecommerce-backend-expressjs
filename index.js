@@ -24,6 +24,8 @@ app.use("/seller",sellerRoutes);
 app.use("/seller/category",categoryRoutes);
 
 
+// uploads folder accessible
+app.use('/uploads', express.static('uploads'));
 // Define a route
 app.get('/', (req, res) => {
   res.send('Hello World!'); // Respond with 'Hello World!' when someone accesses the root URL

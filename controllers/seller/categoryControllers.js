@@ -1,17 +1,22 @@
 const Category = require('../../models/common/categoryModel');
 const sendResponse = require('../../utils/sendResponse');
-
+const generateSlug = require('../../utils/generateSlug');
 // Controller functions for category CRUD operations
 
 // Create a new category
 const createCategory = async (req, res) => {
   try {
-    const { name, description, createdBy, parentId } = req.body;
-    // upload image here
+    const { name, description,  parentId } = req.body;
+    const slug=generateSlug(name);
+    if(req.file===undefined){
+        return sendResponse(res, 400, false, 'Please upload an image', null);
+    }
     const image = req.file.filename;
+    const createdBy = req.id; 
 
     const category = await Category.create({
       name,
+        slug,
       description,
       image,
       createdBy,

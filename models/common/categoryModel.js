@@ -7,13 +7,17 @@ const Category = sequelize.define('Category', {
       primaryKey: true,
       autoIncrement: true
     },
+    slug:{
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false
     },
     description: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: true
     },
     image:{
         type: DataTypes.STRING,
@@ -25,7 +29,7 @@ const Category = sequelize.define('Category', {
     },
     updatedBy: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
     },
     status: {
         type: DataTypes.ENUM('active', 'inactive'),
