@@ -11,10 +11,13 @@ const generateToken = (seller) => {
 const sellerController = {
   register: async (req, res) => {
     const { name, phone, password } = req.body;
+    if(!name||!phone||!password){
+      return sendResponse(res, 400, false, 'All fields are required');
+    }
     try {
       let seller = await Seller.findOne({ where: { phone } });
       if (seller) {
-        return sendResponse(res, 400, 'Seller already exists');
+        return sendResponse(res, 400, false, 'Seller already exists');
       }
 
       const salt = await bcrypt.genSalt(10);
@@ -24,31 +27,34 @@ const sellerController = {
 
       const token = generateToken(seller);
 
-      return sendResponse(res, 201, 'Seller created', { token });
+      return sendResponse(res, 201,false, 'Seller created', { token });
     } catch (error) {
       console.error('Error creating seller:', error);
-        return sendResponse(res, 500, 'Internal server error');
+        return sendResponse(res, 500,false, 'Internal server error');
     }
   },
 
   login: async (req, res) => {
     const { phone, password } = req.body;
+    if(!phone||!password){
+      return sendResponse(res, 400, false,'All fields are required');
+    }
     try {
       const seller = await Seller.findOne({ where: { phone } });
       if (!seller) {
-        return sendResponse(res, 401, 'Invalid credentials');
+        return sendResponse(res, 401, false, 'Invalid credentials');
       }
 
       const isPasswordValid = await bcrypt.compare(password, seller.password);
       if (!isPasswordValid) {
-        return sendResponse(res, 401, 'Invalid credentials');
+        return sendResponse(res, 401, false, 'Invalid credentials');
       }
 
       const token = generateToken(seller);
-      return sendResponse(res, 200, 'Login successful', { token });
+      return sendResponse(res, 200,true, 'Login successful', { token });
     } catch (error) {
       console.error('Error logging in seller:', error);
-      sendResponse(res, 500, 'Internal server error');
+      sendResponse(res, 500,false, 'Internal server error');
     }
   },
 
@@ -61,7 +67,7 @@ const sellerController = {
       res.json(seller);
     } catch (error) {
       console.error('Error fetching seller profile:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      sendResponse(res, 500, false,'Internal server error');
     }
   }
 };
