@@ -5,8 +5,11 @@ require('dotenv').config(); // Load environment variables from .env file
 const db=require('./db_config/db');
 const sellerRoutes=require('./routes/seller/sellerRoutes');
 const categoryRoutes=require('./routes/seller/categoryRoutes');
+require('./models/associations/ProductCategories');
+require('./models/associations/ProductImages');
+db.sync({
 
-db.sync({alter:true})
+})
   .then(() => {
     console.log('Database synchronized');
   })

@@ -23,6 +23,11 @@ const Category = sequelize.define('Category', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    sortValue: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+    },
     createdBy: {
         type: DataTypes.INTEGER,
         allowNull: false
