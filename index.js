@@ -18,7 +18,7 @@ db.sync({
   });
 // Create an Express application
 const app = express();
-const port = process.env.PORT || 3000; // Port number for the server to listen on, defaults to 3000 if PORT is not specified in the .env file
+const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json()); 
