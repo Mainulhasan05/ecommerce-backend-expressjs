@@ -16,11 +16,14 @@ const configureMulter = (directory) => {
       cb(null, directory); // Destination folder for uploaded files
     },
     filename: function (req, file, cb) {
-      cb(null, Date.now() + '-' + file.originalname); // Unique filename
+      cb(null, Date.now() + '-' + file.originalname); 
+      
     }
   });
+// append the directory to the filename
+  const upload = multer({ storage: storage });
 
-  return multer({ storage: storage });
+  return upload;
 };
 
 module.exports = configureMulter;

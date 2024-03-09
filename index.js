@@ -8,22 +8,22 @@ const categoryRoutes=require('./routes/seller/categoryRoutes');
 require('./models/associations/ProductCategories');
 require('./models/associations/ProductImages');
 
-db.authenticate()
+db.sync()
   .then(() => {
     console.log('Database connected');
   })
   .catch((err) => {
     console.error('Error connecting to the database:', err);
   });
-// db.sync({
+db.sync({
 
-// })
-//   .then(() => {
-//     console.log('Database synchronized');
-//   })
-//   .catch((err) => {
-//     console.error('Error synchronizing the database:', err);
-//   });
+})
+  .then(() => {
+    console.log('Database synchronized');
+  })
+  .catch((err) => {
+    console.error('Error synchronizing the database:', err);
+  });
 // Create an Express application
 const app = express();
 const port = process.env.PORT || 3000;
