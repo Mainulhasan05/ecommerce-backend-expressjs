@@ -7,15 +7,23 @@ const sellerRoutes=require('./routes/seller/sellerRoutes');
 const categoryRoutes=require('./routes/seller/categoryRoutes');
 require('./models/associations/ProductCategories');
 require('./models/associations/ProductImages');
-db.sync({
 
-})
+db.authenticate()
   .then(() => {
-    console.log('Database synchronized');
+    console.log('Database connected');
   })
   .catch((err) => {
-    console.error('Error synchronizing the database:', err);
+    console.error('Error connecting to the database:', err);
   });
+// db.sync({
+
+// })
+//   .then(() => {
+//     console.log('Database synchronized');
+//   })
+//   .catch((err) => {
+//     console.error('Error synchronizing the database:', err);
+//   });
 // Create an Express application
 const app = express();
 const port = process.env.PORT || 3000;
