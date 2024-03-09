@@ -7,7 +7,8 @@ const { createCategory, getAllCategories, getCategoryById, updateCategoryById, d
 const upload = configureMulter('uploads/categories');
 
 router.post('/',verifyToken, upload.single('image'), createCategory);
-router.get('/:pageNumber?', getAllCategories);
+router.get('/', getAllCategories);
+router.get('/:pageNumber', getAllCategories);
 router.get('/:id',verifyToken, getCategoryById);
 router.put('/:id',verifyToken, updateCategoryById);
 router.delete('/:id',verifyToken, deleteCategoryById);
