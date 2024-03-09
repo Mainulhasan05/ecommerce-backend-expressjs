@@ -8,8 +8,15 @@ const path = require('path');
 // Create a new category
 const createCategory = async (req, res) => {
   try {
-    const { name, description,  parentId } = req.body;
-    const slug=generateSlug(name);
+    const { name, description,  parentId,sortValue } = req.body;
+    let slug=generateSlug(name);
+    // check if the category already exists of same slug, if have then add time
+    const categorySlug = await Category.findOne({ where: { slug } });
+    if(categorySlug){
+      const time = new Date().getTime();
+      slug=slug+"-"+time;
+    }
+
     if(req.file===undefined){
         return sendResponse(res, 400, false, 'Please upload an image', null);
     }
@@ -22,6 +29,7 @@ const createCategory = async (req, res) => {
         slug,
       description,
       image,
+      sortValue,
       createdBy,
       parentId
     });
