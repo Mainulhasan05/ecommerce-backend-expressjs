@@ -5,6 +5,7 @@ require('dotenv').config(); // Load environment variables from .env file
 const db=require('./db_config/db');
 const sellerRoutes=require('./routes/seller/sellerRoutes');
 const categoryRoutes=require('./routes/seller/categoryRoutes');
+const apiRoutes=require('./routes/api/apiRoutes');
 require('./models/associations/ProductCategories');
 require('./models/associations/ProductImages');
 
@@ -33,6 +34,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/seller",sellerRoutes);
 app.use("/seller/category",categoryRoutes);
+app.use("/api",apiRoutes);
 
 // uploads folder accessible
 app.use('/uploads', express.static('uploads'));
