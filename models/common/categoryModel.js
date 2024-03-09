@@ -40,8 +40,6 @@ const Category = sequelize.define('Category', {
         type: DataTypes.INTEGER,
         allowNull: true
     },
-
-
   },{
     timestamps: true,
   });
