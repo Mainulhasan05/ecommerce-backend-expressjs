@@ -21,11 +21,10 @@ const app = express();
 const port = process.env.PORT || 3000; // Port number for the server to listen on, defaults to 3000 if PORT is not specified in the .env file
 
 // Middleware
-app.use(express.json()); // Middleware to parse JSON requests
-app.use(cors()); // Middleware to handle CORS issues
+app.use(express.json()); 
+app.use(cors());
 app.use("/seller",sellerRoutes);
 app.use("/seller/category",categoryRoutes);
-
 
 // uploads folder accessible
 app.use('/uploads', express.static('uploads'));
