@@ -17,7 +17,7 @@ db.sync()
     console.error('Error connecting to the database:', err);
   });
 db.sync({
-
+  
 })
   .then(() => {
     console.log('Database synchronized');
