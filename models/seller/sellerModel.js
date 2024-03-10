@@ -44,7 +44,11 @@ const Seller = sequelize.define('Seller', {
       allowNull: false,
       defaultValue: false
   },
-  // Additional fields for tracking products and categories
+  hasShop:{
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+  },
   totalProducts: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -65,7 +69,6 @@ const Seller = sequelize.define('Seller', {
       allowNull: false,
       defaultValue: 10 // Assuming a default maximum number of categories
   },
-  
   totalSales: {
       type: DataTypes.FLOAT,
       allowNull: false,
