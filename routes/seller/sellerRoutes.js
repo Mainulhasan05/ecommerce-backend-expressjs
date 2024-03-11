@@ -21,7 +21,7 @@ router.delete('/banner/:id',verifyToken, deleteBanner);
 router.post('/shop',require('../../utils/multerConfig')('uploads/shops').single('image'),verifyToken, createShop);
 router.get('/shop/:id', getShop);
 router.get('/shops', getShops);
-router.put('/shop/:id',verifyToken, updateShop);
+router.put('/shop/:id',require('../../utils/multerConfig')('uploads/shops').single('image'),verifyToken, updateShop);
 router.delete('/shop/:id',verifyToken, deleteShop);
 router.get('/my-shop',verifyToken, getMyShop);
 

@@ -1,4 +1,6 @@
 const Shop=require('../../models/seller/shopModel');
+const Seller=require('../../models/seller/sellerModel');
+const { Op } = require("sequelize");
 const sendResponse = require('../../utils/sendResponse');
 
 const createShop = async (req, res) => {
@@ -6,15 +8,20 @@ const createShop = async (req, res) => {
     try {
         const ownerId = req.id;
         let slug = name.toLowerCase().split(' ').join('-');
-        console.log(req.file)
+        
         const image ="/"+ req.file.path;
         // check if the shop already exists by slug, then add time
         const exists=await Shop.findOne({where:{slug}});
         if(exists){
             slug+=Date.now();
         }
+
         const status="active"
         const shop = await Shop.create({ name, slug, image, description,deliveryChargeInsideChapai,deliveryChargeOutsideChapai, ownerId,status });
+        // update seller with hasShop=1
+        const seller = await Seller.findByPk(ownerId);
+        seller.hasShop=1;
+        await seller.save();
         sendResponse(res, 201,true,"Shop Created Successfully", shop);
     } catch (error) {
         if(req.file){
@@ -59,23 +66,64 @@ const deleteShop = async (req, res) => {
 // images will be uploaded, req.file.filename will be used to save the image
 const updateShop = async (req, res) => {
     const { id } = req.params;
-    const { name, slug, image } = req.body;
+    const { name, description, deliveryChargeInsideChapai, deliveryChargeOutsideChapai, location } = req.body;
+    
     try {
         const shop = await Shop.findByPk(id);
+        
         if (!shop) {
-            sendResponse(res, 404, { message: 'Shop not found' });
-        } else {
-            shop.name = name;
-            shop.slug = slug;
-            shop.image = image;
-            await shop.save();
-            sendResponse(res, 200, shop);
+            return sendResponse(res, 404, { message: 'Shop not found' });
         }
-    }
-    catch (error) {
-        sendResponse(res, 500, error);
+        
+        // Update only if the fields are present in the request body
+        if (name) {
+            shop.name = name;
+            shop.slug = name.toLowerCase().split(' ').join('-');
+            const exists = await Shop.findOne({ where: { slug: shop.slug, id: { [Op.ne]: id } } });
+            if (exists) {
+                shop.slug += Date.now();
+            }
+        }
+
+        if (description) {
+            shop.description = description;
+        }
+
+        if (deliveryChargeInsideChapai) {
+            shop.deliveryChargeInsideChapai = deliveryChargeInsideChapai;
+        }
+
+        if (deliveryChargeOutsideChapai) {
+            shop.deliveryChargeOutsideChapai = deliveryChargeOutsideChapai;
+        }
+
+        if (location) {
+            shop.location = location;
+        }
+
+        if (req.file) {
+            const newImagePath = `/${req.file.path}`;
+            if (shop.image) {
+                try {
+                    await fs.unlink(shop.image); 
+                } catch (error) {
+                    console.error('Error deleting previous image:', error);
+                }
+            }
+            
+            shop.image = newImagePath;
+        }
+
+        // Save the updated shop
+        await shop.save();
+
+        return sendResponse(res, 200, true, "Shop Updated Successfully", shop);
+    } catch (error) {
+        console.log(error);
+        return sendResponse(res, 500, false, "Internal Server Error", error);
     }
 }
+
 
 const getShops = async (req, res) => {
     try {
