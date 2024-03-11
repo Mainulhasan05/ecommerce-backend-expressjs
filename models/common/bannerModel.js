@@ -13,7 +13,8 @@ const Banner = sequelize.define('Banner', {
     },
     type: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 'home'
     },
     sortValue: {
         type: DataTypes.INTEGER,
@@ -25,17 +26,21 @@ const Banner = sequelize.define('Banner', {
         allowNull: false,
         defaultValue: '/'
     },
+    buttonText:{
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     status: {
         type: DataTypes.ENUM('active', 'inactive'),
         allowNull: false,
-        defaultValue: 'active'
+        defaultValue: 'inactive'
     },
     createdBy: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
 }, {
-    // Other model options
+    timestamps: true,
 });
 
 module.exports = Banner;

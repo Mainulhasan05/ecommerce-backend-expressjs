@@ -10,6 +10,9 @@ const getHomeData=async(req,res)=>{
     const shops = await Shop.findAll({
         limit: 10,
         order: [['createdAt', 'DESC']],
+        where: {
+            status: 'active'
+        }
         // include: {
         //     model: Category,
         //     attributes: ['name']

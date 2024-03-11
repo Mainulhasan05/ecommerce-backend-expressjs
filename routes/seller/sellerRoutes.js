@@ -12,7 +12,7 @@ router.post('/login', login);
 router.get('/profile',verifyToken, getProfile);
 
 // banner routes
-router.post('/banner',verifyToken, addBanner);
+router.post('/banner',verifyToken,require('../../utils/multerConfig')('uploads/banner').single('image'), addBanner);
 router.get('/banner', getBanners);
 router.put('/banner/:id',verifyToken, updateBanner);
 router.delete('/banner/:id',verifyToken, deleteBanner);

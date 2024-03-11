@@ -9,7 +9,7 @@ const apiRoutes=require('./routes/api/apiRoutes');
 require('./models/associations/ProductCategories');
 require('./models/associations/ProductImages');
 
-db.sync()
+db.sync({alter:true})
   .then(() => {
     console.log('Database connected');
   })

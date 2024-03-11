@@ -2,12 +2,13 @@ const Banner=require('../../models/common/bannerModel');
 const sendResponse = require('../../utils/sendResponse');
 
 const addBanner=async(req,res)=>{
-    const {type,sortValue,pageUrl}=req.body;
+    // {type: 'home', sortValue: '20', pageUrl: '/', buttonText: 'Shop More', status: 'active'}
+    const {type,sortValue,pageUrl,buttonText,status}=req.body;
     const createdBy=req.id;
     try {
         let imageUrl='';
     if(req.file){
-        imageUrl=req.file.filename;
+        imageUrl= `/${req.file.path}`
     }
     else{
         return sendResponse(res, 400, false, 'Image is required');
@@ -18,7 +19,9 @@ const addBanner=async(req,res)=>{
         type,
         sortValue,
         pageUrl,
-        createdBy
+        createdBy,
+        status,
+        buttonText
     });
     return sendResponse(res, 201, true, 'Banner added successfully', banner);
     } catch (error) {
