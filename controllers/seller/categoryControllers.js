@@ -47,10 +47,18 @@ const getAllCategories = async (req, res) => {
     const { pageNumber } = req.params;
     const page = pageNumber || 0;
     const categories = await Category.findAll({
+      attributes: ['id', 'name', 'slug', 'image', 'sortValue', 'status', 'parentId'],
+      include: [
+        {
+          model: Category,
+          as: 'children',
+          attributes: ['id', 'name', 'slug','createdAt'],
+          order: [[{ model: Category, as: 'children' }, 'createdAt', 'DESC']]
+        }
+      ],
+      order: [[{model: Category, as: 'children'}, 'createdAt', 'DESC']],
         offset: 10 * page,
         limit: 10,
-        order: [['createdAt', 'DESC']]
-        
     });
     sendResponse(res, 200, true, 'Categories retrieved successfully', categories);
   } catch (error) {
@@ -108,10 +116,10 @@ const deleteCategoryById = async (req, res) => {
       
 
       const imagePath = path.join(__dirname,"../../",category.image);
+      console.log(imagePath)
       
-      // Check if the image file exists
       if (fs.existsSync(imagePath)) {
-        // Delete the image file from the folder
+        
         fs.unlinkSync(imagePath);
       }
     }

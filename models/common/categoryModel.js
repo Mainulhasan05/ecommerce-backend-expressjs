@@ -50,4 +50,7 @@ const Category = sequelize.define('Category', {
     timestamps: true,
   });
 
+  Category.hasMany(Category, { foreignKey: 'parentId', as: 'children' });
+  
+
 module.exports = Category;

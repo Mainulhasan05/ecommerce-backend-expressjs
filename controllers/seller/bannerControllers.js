@@ -1,5 +1,6 @@
 const Banner=require('../../models/common/bannerModel');
 const sendResponse = require('../../utils/sendResponse');
+const deleteImage=require('../../utils/deleteImage');
 
 const addBanner=async(req,res)=>{
     // {type: 'home', sortValue: '20', pageUrl: '/', buttonText: 'Shop More', status: 'active'}
@@ -47,16 +48,22 @@ const updateBanner=async(req,res)=>{
     if(!banner){
         return sendResponse(res, 404, false, 'Banner not found');
     }
-    const {type,sortValue,pageUrl}=req.body;
+    const {type,sortValue,pageUrl,buttonText,status}=req.body;
     let imageUrl=banner.imageUrl;
     if(req.file){
-        imageUrl=req.file.filename;
+        // delete previous image
+        if(banner.imageUrl){
+            deleteImage(banner.imageUrl);
+        }
+        imageUrl= `/${req.file.path}`
     }
     await banner.update({
         imageUrl,
         type,
         sortValue,
-        pageUrl
+        pageUrl,
+        buttonText,
+        status
     });
     return sendResponse(res, 200, true, 'Banner updated successfully', banner);
 }
@@ -65,6 +72,10 @@ const deleteBanner=async(req,res)=>{
     const banner=await Banner.findByPk(req.params.id);
     if(!banner){
         return sendResponse(res, 404, false, 'Banner not found');
+    }
+
+    if(banner.imageUrl){
+        deleteImage(banner.imageUrl);
     }
     await banner.destroy();
     return sendResponse(res, 200, true, 'Banner deleted successfully');

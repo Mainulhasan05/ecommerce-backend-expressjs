@@ -14,7 +14,7 @@ router.get('/profile',verifyToken, getProfile);
 // banner routes
 router.post('/banner',verifyToken,require('../../utils/multerConfig')('uploads/banner').single('image'), addBanner);
 router.get('/banner', getBanners);
-router.put('/banner/:id',verifyToken, updateBanner);
+router.put('/banner/:id',verifyToken,require('../../utils/multerConfig')('uploads/banner').single('image'), updateBanner);
 router.delete('/banner/:id',verifyToken, deleteBanner);
 
 // shop routes
