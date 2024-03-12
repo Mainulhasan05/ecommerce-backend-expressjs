@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../../db_config/db');
 
-const Image = sequelize.define('Image', {
+const ProductImages = sequelize.define('ProductImages', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -20,4 +20,4 @@ const Image = sequelize.define('Image', {
     timestamps: true,
   });
 
-module.exports = Image;
+module.exports = ProductImages;

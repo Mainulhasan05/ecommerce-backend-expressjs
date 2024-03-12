@@ -1,109 +1,142 @@
 const Product = require('../../models/common/productModel');
-const Inventory = require('../../models/seller/inventoryModel');
+const ProductImage = require('../../models/common/product_helpers/productImagesModel');
 
-const productController = {
-  createProduct: async (req, res) => {
-    const { name, description, price, quantity, categoryId,image } = req.body;
-    const sellerId = req.id; // Assuming sellerId is available in req.id
-
+const getAllProducts = async (req, res) => {
     try {
-      // Create the product
-      const newProduct = await Product.create({
-        name: name,
-        description: description,
-        price: price,
-        quantity: quantity,
-        categoryId: categoryId,
-        sellerId: sellerId
-      });
-
-      // Automatically add an entry to the inventory table with the initial quantity
-      await Inventory.create({
-        productId: newProduct.id,
-        quantity: quantity,
-        
-      });
-
-      res.status(201).json({ success: true, message: 'Product created successfully', product: newProduct });
+      
+        // Logic to fetch all products from the database
     } catch (error) {
-      console.error('Error creating product:', error);
-      res.status(500).json({ success: false, message: 'Failed to create product' });
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error'
+        });
     }
-  },
-
-  updateProduct: async (req, res) => {
-    const productId = req.params.id;
-    const { name, description, price, quantity, categoryId } = req.body;
-    const sellerId = req.id; // Assuming sellerId is available in req.id
-
-    try {
-      // Check if the product exists and belongs to the seller
-      const existingProduct = await Product.findOne({ where: { id: productId, sellerId: sellerId } });
-      if (!existingProduct) {
-        return res.status(404).json({ success: false, message: 'Product not found or you do not have permission to update it' });
-      }
-
-      // Update the product
-      await existingProduct.update({
-        name: name,
-        description: description,
-        price: price,
-        quantity: quantity,
-        categoryId: categoryId
-      });
-
-      // Synchronize with the inventory table
-      const inventoryEntry = await Inventory.findOne({ where: { productId: productId } });
-      if (inventoryEntry) {
-        inventoryEntry.quantity = quantity;
-        await inventoryEntry.save();
-      }
-
-      res.status(200).json({ success: true, message: 'Product updated successfully', product: existingProduct });
-    } catch (error) {
-      console.error('Error updating product:', error);
-      res.status(500).json({ success: false, message: 'Failed to update product' });
-    }
-  },
-
-  deleteProduct: async (req, res) => {
-    const productId = req.params.id;
-    const sellerId = req.id; // Assuming sellerId is available in req.id
-
-    try {
-      // Check if the product exists and belongs to the seller
-      const existingProduct = await Product.findOne({ where: { id: productId, sellerId: sellerId } });
-      if (!existingProduct) {
-        return res.status(404).json({ success: false, message: 'Product not found or you do not have permission to delete it' });
-      }
-
-      // Soft delete the product
-      await existingProduct.destroy();
-
-      res.status(200).json({ success: true, message: 'Product deleted successfully' });
-    } catch (error) {
-      console.error('Error deleting product:', error);
-      res.status(500).json({ success: false, message: 'Failed to delete product' });
-    }
-  },
-
-  getProduct: async (req, res) => {
-    const productId = req.params.id;
-    const sellerId = req.id; // Assuming sellerId is available in req.id
-
-    try {
-      // Retrieve the product
-      const product = await Product.findOne({ where: { id: productId, sellerId: sellerId } });
-      if (!product) {
-        return res.status(404).json({ success: false, message: 'Product not found or you do not have permission to access it' });
-      }
-
-      res.status(200).json({ success: true, product: product });
-    } catch (error) {
-      console.error('Error retrieving product:', error);
-      res.status(500).json({ success: false, message: 'Failed to retrieve product' });
-    }
-  }
 };
 
-module.exports = productController;
+const createProduct = async (req, res) => {
+    try {
+      // name: {
+      //   type: DataTypes.STRING,
+      //   allowNull: false
+      // },
+      // description: {
+      //   type: DataTypes.TEXT,
+      //   allowNull: false
+      // },
+      // price: {
+      //   type: DataTypes.DECIMAL(10, 2),
+      //   allowNull: false
+      // },
+      // quantity: {
+      //   type: DataTypes.INTEGER,
+      //   allowNull: false
+      // },
+      // sellerId: {
+      //   type: DataTypes.INTEGER,
+      //   allowNull: false
+      // },
+      // categoryId: {
+      //   type: DataTypes.INTEGER,
+      //   allowNull: false
+      // }
+        const { name, description, old_price,new_price, categoryId,quantity, } = req.body;
+        const sellerId = req.id; // Assuming the seller ID is available in the request object
+
+        // Create the product
+        const product = await Product.create({
+            name,
+            description,
+            old_price,
+            new_price,
+            quantity,
+            sellerId,
+            categoryId
+        });
+
+        console.log(req.body);
+        if (req.files && req.files.length > 0) {
+            const images = req.files.map(file => ({
+                product_id: product.id, // Associate image with the created product
+                url: file.path // Assuming file.path contains the URL or path to the uploaded image
+            }));
+            
+            // Create product images
+            await ProductImage.bulkCreate(images);
+        }
+
+        res.status(201).json({
+            success: true,
+            message: 'Product created successfully',
+            data: product
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error'
+        });
+    }
+};
+
+const getProductById = async (req, res) => {
+    try {
+        // Logic to fetch a product by ID
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error'
+        });
+    }
+};
+
+const updateProduct = async (req, res) => {
+    try {
+        // Extract product information from the request body
+        const { name, description, price } = req.body;
+        const productId = req.params.productId;
+
+        // Update the product
+        await Product.update({
+            name,
+            description,
+            price
+        }, {
+            where: {
+                id: productId
+            }
+        });
+
+        res.status(200).json({
+            success: true,
+            message: 'Product updated successfully'
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error'
+        });
+    }
+};
+
+const deleteProduct = async (req, res) => {
+    try {
+        // Logic to delete a product
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error'
+        });
+    }
+};
+
+module.exports = {
+    getAllProducts,
+    createProduct,
+    getProductById,
+    updateProduct,
+    deleteProduct
+};

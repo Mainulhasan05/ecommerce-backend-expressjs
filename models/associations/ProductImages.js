@@ -1,5 +1,5 @@
 const Product=require('../common/productModel');
-const Image=require('../common/product_helpers/imageModel');
+const ProductImages=require('../common/product_helpers/productImagesModel');
 
-Product.hasMany(Image, { as: 'images' });
-Image.belongsTo(Product);
+Product.hasMany(ProductImages, { foreignKey: 'productId', as: 'images'});
+

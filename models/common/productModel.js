@@ -15,11 +15,15 @@ const Product = sequelize.define('Product', {
       type: DataTypes.TEXT,
       allowNull: false
     },
-    price: {
-      type: DataTypes.DECIMAL(10, 2),
+    old_price: {
+      type: DataTypes.INTEGER,
       allowNull: false
     },
-    stock: {
+    new_price: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    quantity: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
@@ -27,7 +31,6 @@ const Product = sequelize.define('Product', {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-
     categoryId: {
       type: DataTypes.INTEGER,
       allowNull: false
