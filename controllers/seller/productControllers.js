@@ -1,6 +1,6 @@
 const Product = require('../../models/common/productModel');
 const ProductImage = require('../../models/common/product_helpers/productImagesModel');
-
+const deleteImage = require('../../utils/deleteImage');
 const getAllProducts = async (req, res) => {
     try {
       
@@ -16,30 +16,7 @@ const getAllProducts = async (req, res) => {
 
 const createProduct = async (req, res) => {
     try {
-      // name: {
-      //   type: DataTypes.STRING,
-      //   allowNull: false
-      // },
-      // description: {
-      //   type: DataTypes.TEXT,
-      //   allowNull: false
-      // },
-      // price: {
-      //   type: DataTypes.DECIMAL(10, 2),
-      //   allowNull: false
-      // },
-      // quantity: {
-      //   type: DataTypes.INTEGER,
-      //   allowNull: false
-      // },
-      // sellerId: {
-      //   type: DataTypes.INTEGER,
-      //   allowNull: false
-      // },
-      // categoryId: {
-      //   type: DataTypes.INTEGER,
-      //   allowNull: false
-      // }
+      
         const { name, description, old_price,new_price, categoryId,quantity, } = req.body;
         const sellerId = req.id; // Assuming the seller ID is available in the request object
 
@@ -57,8 +34,8 @@ const createProduct = async (req, res) => {
         console.log(req.body);
         if (req.files && req.files.length > 0) {
             const images = req.files.map(file => ({
-                product_id: product.id, // Associate image with the created product
-                url: file.path // Assuming file.path contains the URL or path to the uploaded image
+                product_id: product.id, 
+                url: file.path 
             }));
             
             // Create product images
@@ -71,6 +48,12 @@ const createProduct = async (req, res) => {
             data: product
         });
     } catch (error) {
+      // if images are uploaded then delete them
+      if (req.files && req.files.length > 0) {
+        req.files.forEach(file => {
+            deleteImage(file.path);
+        });
+    }
         console.error(error);
         res.status(500).json({
             success: false,

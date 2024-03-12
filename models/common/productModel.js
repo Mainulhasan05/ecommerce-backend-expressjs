@@ -34,7 +34,17 @@ const Product = sequelize.define('Product', {
     categoryId: {
       type: DataTypes.INTEGER,
       allowNull: false
-    }
+    },
+    status: {
+      type: DataTypes.ENUM('active', 'inactive'),
+      allowNull: false,
+      defaultValue: 'active'
+    },
+    sortValue: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
+    },
   },{
     timestamps: true,
   });
