@@ -1,10 +1,3 @@
-// ReviewID (Primary Key)
-// ProductID (Foreign Key referencing Products Table)
-// CustomerID (Foreign Key referencing Customers Table)
-// Rating
-// Comment
-// ReviewDate
-
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../db_config/db');
 
