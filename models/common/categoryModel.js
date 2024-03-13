@@ -50,7 +50,10 @@ const Category = sequelize.define('Category', {
     timestamps: true,
   });
 
-  Category.hasMany(Category, { foreignKey: 'parentId', as: 'children' });
-  
+  Category.hasMany(Category, { foreignKey:{
+    field: 'parentId',
+    allowNull: true,
+    defaultValue:null
+  }, as: 'children', onDelete: 'cascade', hooks: true});
 
 module.exports = Category;
