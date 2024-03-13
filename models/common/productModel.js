@@ -11,6 +11,11 @@ const Product = sequelize.define('Product', {
       type: DataTypes.STRING,
       allowNull: false
     },
+    slug: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: false
+    },
     description: {
       type: DataTypes.TEXT,
       allowNull: false
@@ -18,6 +23,10 @@ const Product = sequelize.define('Product', {
     old_price: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    image: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
     new_price: {
       type: DataTypes.INTEGER,
@@ -28,10 +37,6 @@ const Product = sequelize.define('Product', {
       allowNull: false
     },
     sellerId: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    categoryId: {
       type: DataTypes.INTEGER,
       allowNull: false
     },

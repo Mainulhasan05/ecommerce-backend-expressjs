@@ -8,7 +8,7 @@ const path = require('path');
 // Create a new category
 const createCategory = async (req, res) => {
   try {
-    const { name, description,  parentId,sortValue } = req.body;
+    const { name, description,  parentId,sortValue,isFeatured } = req.body;
     let slug=generateSlug(name);
     // check if the category already exists of same slug, if have then add time
     const categorySlug = await Category.findOne({ where: { slug } });
@@ -31,7 +31,8 @@ const createCategory = async (req, res) => {
       image,
       sortValue,
       createdBy,
-      parentId
+      parentId,
+      isFeatured
     });
 
     sendResponse(res, 201, true, 'Category created successfully', category);

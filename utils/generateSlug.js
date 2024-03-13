@@ -1,5 +1,12 @@
-const generateSlug = (text) => {    
-    return text.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+var slugify = require('slugify')
+
+const generateSlug = (name) => {
+    return slugify(name, {
+        lower: true,
+        strict:false,
+        trim:true,
+        replacement: '-'
+    })
 }
 
 module.exports = generateSlug;

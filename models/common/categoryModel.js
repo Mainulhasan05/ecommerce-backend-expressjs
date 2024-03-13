@@ -46,6 +46,11 @@ const Category = sequelize.define('Category', {
         type: DataTypes.INTEGER,
         allowNull: true
     },
+    isFeatured: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    }
   },{
     timestamps: true,
   });
@@ -53,7 +58,6 @@ const Category = sequelize.define('Category', {
   Category.hasMany(Category, { foreignKey:{
     field: 'parentId',
     allowNull: true,
-    defaultValue:null
   }, as: 'children', onDelete: 'cascade', hooks: true});
 
 module.exports = Category;

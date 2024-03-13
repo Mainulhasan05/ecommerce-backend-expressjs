@@ -33,7 +33,7 @@ router.get('/my-shop', verifyToken, getMyShop);
 // product routes, multiple images upload
 router.post('/product', require('../../utils/multerConfig')('uploads/products').array('images', 5), verifyToken, createProduct);
 router.get('/product/:id', getProductById);
-router.get('/products', getAllProducts);
+router.get('/products',verifyToken, getAllProducts);
 router.put('/product/:id', verifyToken, updateProduct);
 router.delete('/product/:id', verifyToken, deleteProduct);
 
