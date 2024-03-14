@@ -1,5 +1,8 @@
 const Category = require('../../models/common/categoryModel');
 const Shop = require('../../models/seller/shopModel');
+const Product = require('../../models/common/productModel');
+
+
 const sendResponse = require('../../utils/sendResponse');
 const getHomeData=async(req,res)=>{
     // get 10 categories, descending of sortValue
@@ -18,10 +21,18 @@ const getHomeData=async(req,res)=>{
         //     attributes: ['name']
         // }
     });
+    const newArrivals = await Product.findAll({
+        limit: 10,
+        attributes: ['id', 'name', 'slug', 'image', 'old_price', 'new_price', 'quantity'],
+        order: [['createdAt', 'DESC']],
+        where: {
+            status: 'active'
+        }
+    });
     const data={
         categories,
-        featuredShops:shops
-    
+        featuredShops:shops,
+        newArrivals    
     }
     return sendResponse(res, 200, true, 'Home data retrieved successfully', data);
     
