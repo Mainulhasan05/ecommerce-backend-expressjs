@@ -33,6 +33,18 @@ const createProduct = async (req, res) => {
         const { name, description, old_price, new_price, categoryIds, quantity,status } = req.body;
         const sellerId = req.id;
         let slug = generateSlug(name);
+        // Check if the slug already exists
+        const productExists = await Product.findOne({
+            where: {
+                slug
+            }
+        });
+
+        if (productExists) {
+            slug = `${slug}-${Date.now()}`;
+        }
+        
+
 
         let product = await Product.create({
             name,
@@ -42,6 +54,7 @@ const createProduct = async (req, res) => {
             new_price,
             quantity,
             sellerId,
+            status
         });
 
         // Create product categories

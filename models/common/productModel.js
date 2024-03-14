@@ -50,6 +50,11 @@ const Product = sequelize.define('Product', {
       allowNull: false,
       defaultValue: 0
     },
+    views: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
+    }
   },{
     timestamps: true,
   });
