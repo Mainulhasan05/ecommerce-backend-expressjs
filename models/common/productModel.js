@@ -58,6 +58,11 @@ const Product = sequelize.define('Product', {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0
+    },
+    sold:{
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
     }
   },{
     timestamps: true,
