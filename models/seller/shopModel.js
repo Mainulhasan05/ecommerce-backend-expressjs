@@ -43,6 +43,16 @@ const Shop = sequelize.define('Shop', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  sortValue: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  productCount: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
   
 });
 

@@ -69,6 +69,8 @@ const createProduct = async (req, res) => {
             status,
             shopId: shop.id
         });
+        // shop,productCount
+        
 
         await product.addCategories(categoryIds);
         let imageUrl="";
@@ -85,7 +87,7 @@ const createProduct = async (req, res) => {
             imageUrl=images[0].url;
             
         }
-
+        await Shop.update({productCount:shop.productCount+1},{where:{id:shop.id}});
         sendResponse(res, 201, true, 'Product created successfully', {
             id: product.id,
             name: product.name,
@@ -139,9 +141,41 @@ const updateProduct = async (req, res) => {
     }
 };
 
+// handle product deletion
+// write full code for this function
 const deleteProduct = async (req, res) => {
     try {
-        // Logic to delete a product
+        // delete all images, product, decrease shop productCount
+        const productId = req.params.productId;
+        const product = await Product.findByPk(productId);
+        if (!product) {
+            return sendResponse(res, 404, false, 'Product not found');
+        }
+        const shop = await Shop.findByPk(product.shopId);
+        if (!shop) {
+            return sendResponse(res, 404, false, 'Shop not found');
+        }
+        // delete all images from storage
+        const images = await ProductImage.findAll({
+            where: {
+                productId
+            }
+        });
+        images.forEach(image => {
+            deleteImage(image.url);
+        });
+        await ProductImage.destroy({
+            where: {
+                productId
+            }
+        });
+        await Product.destroy({
+            where: {
+                id: productId
+            }
+        });
+        await Shop.update({productCount:shop.productCount-1},{where:{id:shop.id}});
+        sendResponse(res, 200, true, 'Product deleted successfully');
     } catch (error) {
         console.error(error);
         sendResponse(res, 500, false, error.message);
