@@ -1,6 +1,7 @@
 const Product=require('../../models/common/productModel');
 const ProductImage=require('../../models/common/product_helpers/productImagesModel');
 const Category=require('../../models/common/categoryModel');
+const Shop=require('../../models/seller/shopModel');
 const sendResponse=require('../../utils/sendResponse');
 const deleteImage=require('../../utils/deleteImage');
 
@@ -44,7 +45,13 @@ const getProductBySlug=async(req,res)=>{
                     model:Category,
                     attributes:['name','slug'],
                     as:'categories'
+                },
+                {
+                    model:Shop,
+                    attributes:['name','slug'],
+                    as:'shop'
                 }
+
             ]
         });
 

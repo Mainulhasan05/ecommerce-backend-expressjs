@@ -6,6 +6,7 @@ const Product = require('../../models/common/productModel');
 const sendResponse = require('../../utils/sendResponse');
 const getHomeData=async(req,res)=>{
     const categories = await Category.findAll({
+        attributes: ['id', 'name', 'slug', 'image'],
         limit: 10,
         order: [['sortValue', 'DESC']]
     });

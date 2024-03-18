@@ -53,6 +53,11 @@ const Shop = sequelize.define('Shop', {
     allowNull: false,
     defaultValue: 0
   },
+  rating: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+    defaultValue: 0
+  },
   
 });
 

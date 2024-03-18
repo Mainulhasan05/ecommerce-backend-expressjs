@@ -10,8 +10,9 @@ require('./models/associations/ProductCategories');
 require('./models/associations/ProductImages');
 require('./models/associations/ProductAttributeValue');
 require('./models/associations/OrderItemProduct');
+require('./models/associations/ProductShop');
 
-db.sync({alter:false})
+db.sync({alter:true})
   .then(() => {
     console.log('Database connected');
   })
