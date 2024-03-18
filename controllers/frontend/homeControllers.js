@@ -12,6 +12,7 @@ const getHomeData=async(req,res)=>{
     });
     const shops = await Shop.findAll({
         limit: 10,
+        attributes: ['id', 'name', 'slug', 'image',],
         order: [['createdAt', 'DESC']],
         where: {
             status: 'active'

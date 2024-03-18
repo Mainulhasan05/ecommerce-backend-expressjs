@@ -52,9 +52,15 @@ const getProductBySlug=async(req,res)=>{
             return sendResponse(res,404,false,'Product not found');
         }
 
+        
+        
+
         product.views=product.views+1;
         
         await product.save();
+        if (product && product.images) {
+            product.images = product.images.map(image => image.url);
+        }
 
         sendResponse(res,200,true,'Product fetched successfully',product);
     }
