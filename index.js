@@ -1,7 +1,7 @@
-// Import required modules
+
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config(); // Load environment variables from .env file
+require('dotenv').config();
 const db=require('./db_config/db');
 const sellerRoutes=require('./routes/seller/sellerRoutes');
 const categoryRoutes=require('./routes/seller/categoryRoutes');
@@ -9,24 +9,15 @@ const apiRoutes=require('./routes/api/apiRoutes');
 require('./models/associations/ProductCategories');
 require('./models/associations/ProductImages');
 require('./models/associations/ProductAttributeValue');
+require('./models/associations/OrderItemProduct');
 
-db.sync({alter:true})
+db.sync({alter:false})
   .then(() => {
     console.log('Database connected');
   })
   .catch((err) => {
     console.error('Error connecting to the database:', err);
   });
-db.sync({
-  // alter:true
-})
-  .then(() => {
-    console.log('Database synchronized');
-  })
-  .catch((err) => {
-    console.error('Error synchronizing the database:', err);
-  });
-// Create an Express application
 const app = express();
 const port = process.env.PORT || 3000;
 
