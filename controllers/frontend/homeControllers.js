@@ -10,6 +10,14 @@ const getHomeData=async(req,res)=>{
         limit: 10,
         order: [['sortValue', 'DESC']]
     });
+    const featuredCategories = await Category.findAll({
+        attributes: ['id', 'name', 'slug', 'image'],
+        limit: 10,
+        order: [['sortValue', 'DESC']],
+        where: {
+            isFeatured: true
+        }
+    });
     const shops = await Shop.findAll({
         limit: 10,
         attributes: ['id', 'name', 'slug', 'image',],
@@ -49,7 +57,8 @@ const getHomeData=async(req,res)=>{
         featuredShops:shops,
         newArrivals,
         trendingProducts,
-        bestSellingProducts
+        bestSellingProducts,
+        featuredCategories
     }
     return sendResponse(res, 200, true, 'Home data retrieved successfully', data);
     
