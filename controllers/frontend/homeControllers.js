@@ -5,7 +5,6 @@ const Product = require('../../models/common/productModel');
 
 const sendResponse = require('../../utils/sendResponse');
 const getHomeData=async(req,res)=>{
-    // get 10 categories, descending of sortValue
     const categories = await Category.findAll({
         limit: 10,
         order: [['sortValue', 'DESC']]
@@ -17,10 +16,6 @@ const getHomeData=async(req,res)=>{
         where: {
             status: 'active'
         }
-        // include: {
-        //     model: Category,
-        //     attributes: ['name']
-        // }
     });
     const newArrivals = await Product.findAll({
         limit: 10,
@@ -30,10 +25,30 @@ const getHomeData=async(req,res)=>{
             status: 'active'
         }
     });
+    const trendingProducts = await Product.findAll({
+        limit: 10,
+        attributes: ['id', 'name', 'slug', 'image', 'old_price', 'new_price', 'quantity'],
+        order: [['views', 'DESC']],
+        where: {
+            status: 'active'
+        }
+    });
+
+    const bestSellingProducts = await Product.findAll({
+        limit: 10,
+        attributes: ['id', 'name', 'slug', 'image', 'old_price', 'new_price', 'quantity'],
+        order: [['sold', 'DESC']],
+        where: {
+            status: 'active'
+        }
+    });
+
     const data={
         categories,
         featuredShops:shops,
-        newArrivals    
+        newArrivals,
+        trendingProducts,
+        bestSellingProducts
     }
     return sendResponse(res, 200, true, 'Home data retrieved successfully', data);
     
