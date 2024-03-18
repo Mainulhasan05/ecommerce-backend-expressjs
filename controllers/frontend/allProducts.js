@@ -17,7 +17,7 @@ exports.getAllProducts = async (req, res) => {
         }
         if (priceRange) {
             const priceArr = priceRange.split("-");
-            query.price = { [Op.gte]: parseInt(priceArr[0], 10), [Op.lte]: parseInt(priceArr[1], 10) };
+            query.new_price = { [Op.gte]: parseInt(priceArr[0], 10), [Op.lte]: parseInt(priceArr[1], 10) };
         }
 
         let sortQuery = [];
