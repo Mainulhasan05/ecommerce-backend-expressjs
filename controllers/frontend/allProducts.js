@@ -13,7 +13,7 @@ exports.getAllProducts = async (req, res) => {
 
         let query = {};
         if (search) {
-            query.name = { [Op.iLike]: `%${search}%` };
+            query.name = { [Op.like]: `%${search}%` };
         }
         if (priceRange) {
             const priceArr = priceRange.split("-");
