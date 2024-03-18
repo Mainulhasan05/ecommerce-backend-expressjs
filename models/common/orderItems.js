@@ -1,8 +1,3 @@
-// OrderItemID (Primary Key)
-// OrderID (Foreign Key referencing Orders Table)
-// ProductID (Foreign Key referencing Products Table)
-// Quantity
-// UnitPrice
 
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../db_config/db');
@@ -28,7 +23,25 @@ const OrderItem = sequelize.define('OrderItem', {
     unitPrice: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false
-    }
+    },
+    totalAmount: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false
+    },
+    status: {
+        type: DataTypes.ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled'),
+        allowNull: false,
+        defaultValue: 'pending'
+    },
+    paymentStatus: {
+        type: DataTypes.ENUM('pending', 'partially paid', 'completed','refund','failed'),
+        allowNull: false,
+        defaultValue: 'pending'
+    },
+    productVariationId: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
   },{
     timestamps: true,
   });

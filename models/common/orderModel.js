@@ -1,8 +1,3 @@
-// OrderID (Primary Key)
-// CustomerID (Foreign Key referencing Customers Table)
-// OrderDate
-// TotalAmount
-
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../db_config/db');
 
