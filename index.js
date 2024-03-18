@@ -8,6 +8,7 @@ const categoryRoutes=require('./routes/seller/categoryRoutes');
 const apiRoutes=require('./routes/api/apiRoutes');
 require('./models/associations/ProductCategories');
 require('./models/associations/ProductImages');
+require('./models/associations/ProductAttributeValue');
 
 db.sync({alter:true})
   .then(() => {

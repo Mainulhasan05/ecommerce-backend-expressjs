@@ -1,5 +1,6 @@
 const Product = require('../../models/common/productModel');
 const ProductImage = require('../../models/common/product_helpers/productImagesModel');
+const Shop=require('../../models/seller/shopModel');
 const sendResponse = require('../../utils/sendResponse');
 const deleteImage = require('../../utils/deleteImage');
 const generateSlug = require('../../utils/generateSlug');
@@ -32,6 +33,17 @@ const createProduct = async (req, res) => {
     try {
         const { name, description, old_price, new_price, categoryIds, quantity,status } = req.body;
         const sellerId = req.id;
+        // Check if the seller has a shop, ownerId
+        const shop = await Shop.findOne({
+            where: {
+                ownerId: sellerId
+            }
+        });
+
+        if (!shop) {
+            return sendResponse(res, 400, false, 'You need to create a shop before you can add products');
+        }
+
         let slug = generateSlug(name);
         // Check if the slug already exists
         const productExists = await Product.findOne({
@@ -54,10 +66,10 @@ const createProduct = async (req, res) => {
             new_price,
             quantity,
             sellerId,
-            status
+            status,
+            shopId: shop.id
         });
 
-        // Create product categories
         await product.addCategories(categoryIds);
         let imageUrl="";
         if (req.files && req.files.length > 0) {
@@ -66,9 +78,9 @@ const createProduct = async (req, res) => {
                 url: `/${file.path}`
             }));
 
-            // Create product images
+
             await ProductImage.bulkCreate(images);
-            // Add image 0 as main image
+            
             await Product.update({ image: images[0].url }, { where: { id: product.id } });
             imageUrl=images[0].url;
             

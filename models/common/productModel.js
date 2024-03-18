@@ -40,6 +40,10 @@ const Product = sequelize.define('Product', {
       type: DataTypes.INTEGER,
       allowNull: false
     },
+    shopId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     status: {
       type: DataTypes.ENUM('active', 'inactive'),
       allowNull: false,
