@@ -12,14 +12,8 @@ const getAllProducts = async (req, res) => {
             where: {
                 sellerId
             },
-            attributes: ['id', 'name', 'slug', 'image','old_price', 'new_price', 'quantity', 'status'],
-            // include: [
-            //     {
-            //         model: ProductImage,
-            //         attributes: ['url'],
-            //         as: 'images'
-            //     }
-            // ]
+            attributes: ['id', 'name', 'slug', 'image','old_price', 'new_price', 'views','quantity', 'status'],
+            limit: 20,
         });
 
         sendResponse(res, 200, true, 'Products fetched successfully', products);

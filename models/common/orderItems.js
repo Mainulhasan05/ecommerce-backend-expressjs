@@ -21,11 +21,11 @@ const OrderItem = sequelize.define('OrderItem', {
         allowNull: false
     },
     unitPrice: {
-        type: DataTypes.DECIMAL(10, 2),
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     totalAmount: {
-        type: DataTypes.DECIMAL(10, 2),
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     status: {

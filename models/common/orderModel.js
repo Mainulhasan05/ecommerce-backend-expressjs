@@ -13,7 +13,12 @@ const Order = sequelize.define('Order', {
     },
     orderDate: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
+        defaultValue: new Date()
+    },
+    note: {
+        type: DataTypes.STRING,
+        allowNull: true
     },
     totalAmount: {
         type: DataTypes.DECIMAL(10, 2),
