@@ -9,6 +9,9 @@ const { getAllProducts,
     updateProduct,
     deleteProduct } = require('../../controllers/seller/productControllers');
 
+    // activity
+    const {getAllActivities,getActivitiesForSeller}=require('../../controllers/trackActivityController');
+
 const verifyToken = require('../../middlewares/verifyToken');
 
 // auth routes
@@ -36,6 +39,10 @@ router.get('/product/:id', getProductById);
 router.get('/products',verifyToken, getAllProducts);
 router.put('/product/:id', verifyToken, updateProduct);
 router.delete('/product/:id', verifyToken, deleteProduct);
+
+// activity routes
+router.get('/activities',verifyToken,getAllActivities);
+router.get('/activities/:id',verifyToken,getActivitiesForSeller);
 
 
 
