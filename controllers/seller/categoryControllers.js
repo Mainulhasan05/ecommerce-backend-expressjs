@@ -38,7 +38,7 @@ const createCategory = async (req, res) => {
     sendResponse(res, 201, true, 'Category created successfully', category);
   } catch (error) {
     console.error(error);
-    sendResponse(res, 500, false, 'Server Error', null);
+    sendResponse(res, 500, false, error.message, error);
   }
 };
 
