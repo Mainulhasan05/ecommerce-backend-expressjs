@@ -1,6 +1,7 @@
 const Product = require('../../models/common/productModel');
 const ProductImage = require('../../models/common/product_helpers/productImagesModel');
 const Shop=require('../../models/seller/shopModel');
+const {trackActivity}=require('../trackActivityController');
 const sendResponse = require('../../utils/sendResponse');
 const deleteImage = require('../../utils/deleteImage');
 const generateSlug = require('../../utils/generateSlug');
@@ -27,7 +28,7 @@ const createProduct = async (req, res) => {
     try {
         const { name, description, old_price, new_price, categoryIds, quantity,status } = req.body;
         const sellerId = req.id;
-        // Check if the seller has a shop, ownerId
+        
         const shop = await Shop.findOne({
             where: {
                 ownerId: sellerId
@@ -39,7 +40,7 @@ const createProduct = async (req, res) => {
         }
 
         let slug = generateSlug(name);
-        // Check if the slug already exists
+        
         const productExists = await Product.findOne({
             where: {
                 slug
@@ -63,7 +64,8 @@ const createProduct = async (req, res) => {
             status,
             shopId: shop.id
         });
-        // shop,productCount
+        
+        trackActivity(sellerId, `created product ${product.name}`);
         
 
         await product.addCategories(categoryIds);
@@ -91,7 +93,7 @@ const createProduct = async (req, res) => {
             status: product.status
         });
     } catch (error) {
-        // If images are uploaded, delete them
+        
         if (req.files && req.files.length > 0) {
             req.files.forEach(file => {
                 deleteImage(file.path);
@@ -127,6 +129,7 @@ const updateProduct = async (req, res) => {
                 id: productId
             }
         });
+        await trackActivity(req.id, `updated product ${name}`);
 
         sendResponse(res, 200, true, 'Product updated successfully');
     } catch (error) {
@@ -169,6 +172,7 @@ const deleteProduct = async (req, res) => {
             }
         });
         await Shop.update({productCount:shop.productCount-1},{where:{id:shop.id}});
+        await trackActivity(req.id, `deleted product ${product.name}`);
         sendResponse(res, 200, true, 'Product deleted successfully');
     } catch (error) {
         console.error(error);

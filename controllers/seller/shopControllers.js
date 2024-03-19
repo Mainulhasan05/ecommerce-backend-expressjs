@@ -1,13 +1,15 @@
 const Shop=require('../../models/seller/shopModel');
 const Seller=require('../../models/seller/sellerModel');
 const { Op } = require("sequelize");
+const {trackActivity}=require('../trackActivityController');
+const generateSlug = require('../../utils/generateSlug');
 const sendResponse = require('../../utils/sendResponse');
 
 const createShop = async (req, res) => {
     const { name, description,deliveryChargeInsideChapai,deliveryChargeOutsideChapai } = req.body;
     try {
         const ownerId = req.id;
-        let slug = name.toLowerCase().split(' ').join('-');
+        let slug = generateSlug(name);
         
         const image ="/"+ req.file.path;
         // check if the shop already exists by slug, then add time
@@ -22,12 +24,13 @@ const createShop = async (req, res) => {
         const seller = await Seller.findByPk(ownerId);
         seller.hasShop=1;
         await seller.save();
+        trackActivity(ownerId,`Created a shop with name ${name}`);
         sendResponse(res, 201,true,"Shop Created Successfully", shop);
     } catch (error) {
         if(req.file){
             fs.unlink(req.file.path);
         }
-        sendResponse(res, 500, error);
+        sendResponse(res, 500, false, error.message, error);
     }
 };
 
@@ -116,6 +119,7 @@ const updateShop = async (req, res) => {
 
         // Save the updated shop
         await shop.save();
+        trackActivity(req.id, `updated shop ${name}`);
 
         return sendResponse(res, 200, true, "Shop Updated Successfully", shop);
     } catch (error) {

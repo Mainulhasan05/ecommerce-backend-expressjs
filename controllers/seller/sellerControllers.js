@@ -1,6 +1,7 @@
 const Seller = require('../../models/seller/sellerModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const {trackActivity}=require('../trackActivityController');
 const sendResponse=require('../../utils/sendResponse');
 
 
@@ -39,6 +40,7 @@ const sellerController = {
       seller = await Seller.create({ name, phone, password: hashedPassword });
 
       const token = generateToken(seller);
+      trackActivity(seller.id,`Seller: ${name} joined the platform`);
 
       return sendResponse(res, 201,false, 'Seller created', { token });
     } catch (error) {
