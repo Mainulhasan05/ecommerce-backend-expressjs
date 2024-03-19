@@ -31,7 +31,9 @@ const createCategory = async (req, res) => {
       image,
       sortValue,
       createdBy,
-      parentId,
+      if(parentId){
+        parentId
+      },
       isFeatured
     });
 

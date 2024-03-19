@@ -44,7 +44,8 @@ const Category = sequelize.define('Category', {
     },
     parentId: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: true,
+        defaultValue: null
     },
     isFeatured: {
         type: DataTypes.BOOLEAN,
