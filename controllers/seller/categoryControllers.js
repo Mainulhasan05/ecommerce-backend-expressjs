@@ -23,19 +23,28 @@ const createCategory = async (req, res) => {
     const image ="/uploads/categories/"+ req.file.filename;
     
     const createdBy = req.id; 
+    const obj={}
+    if(name){
+      obj.name=name;
+    }
+    if(description){
+      obj.description=description;
+    }
+    if(parentId){
+      obj.parentId=parentId;
+    }
+    if(sortValue){
+      obj.sortValue=sortValue;
+    }
+    if(isFeatured){
+      obj.isFeatured=isFeatured;
+    }
+    obj.slug=slug;
+    obj.image=image;
+    obj.createdBy=createdBy;
 
-    const category = await Category.create({
-      name,
-        slug,
-      description,
-      image,
-      sortValue,
-      createdBy,
-      if(parentId){
-        parentId
-      },
-      isFeatured
-    });
+
+    const category = await Category.create(obj);
 
     sendResponse(res, 201, true, 'Category created successfully', category);
   } catch (error) {
