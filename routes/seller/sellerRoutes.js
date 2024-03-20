@@ -9,6 +9,7 @@ const { getAllProducts,
     updateProduct,
     deleteProduct } = require('../../controllers/seller/productControllers');
 
+const {getDashboard}=require('../../controllers/seller/dashboardControllers');
     // activity
     const {getAllActivities,getActivitiesForSeller}=require('../../controllers/trackActivityController');
 
@@ -43,6 +44,9 @@ router.delete('/product/:id', verifyToken, deleteProduct);
 // activity routes
 router.get('/activities',verifyToken,getAllActivities);
 router.get('/activities/:id',verifyToken,getActivitiesForSeller);
+
+// dashboard
+router.get('/dashboard',verifyToken,getDashboard);
 
 
 

@@ -1,6 +1,7 @@
 const Product = require('../../models/common/productModel');
 const ProductImage = require('../../models/common/product_helpers/productImagesModel');
 const Shop=require('../../models/seller/shopModel');
+const OrderItem=require('../../models/common/orderItems');
 const {trackActivity}=require('../trackActivityController');
 const sendResponse = require('../../utils/sendResponse');
 const deleteImage = require('../../utils/deleteImage');
@@ -27,6 +28,15 @@ const getAllProducts = async (req, res) => {
 const createProduct = async (req, res) => {
     try {
         const { name, description, old_price, new_price, categoryIds, quantity,status } = req.body;
+        if (name.length < 3) {
+            trackActivity(req.id, `failed to create product ${name} for name length less than 3 characters`);
+            return sendResponse(res, 400, false, 'Product name must be at least 3 characters');
+        }
+        if (old_price < 0 || new_price < 0) {
+            trackActivity(req.id, `failed to create product ${name} for negative price`);
+            return sendResponse(res, 400, false, 'Price cannot be negative');
+        }
+        
         const sellerId = req.id;
         
         const shop = await Shop.findOne({
@@ -144,6 +154,10 @@ const deleteProduct = async (req, res) => {
     try {
         // delete all images, product, decrease shop productCount
         const productId = req.params.productId;
+        const orderItem=await OrderItem.findOne({where:{productId}});
+        if(orderItem){
+            return sendResponse(res, 400, false, 'Product cannot be deleted because it is in an order');
+        }
         const product = await Product.findByPk(productId);
         if (!product) {
             return sendResponse(res, 404, false, 'Product not found');
@@ -152,7 +166,7 @@ const deleteProduct = async (req, res) => {
         if (!shop) {
             return sendResponse(res, 404, false, 'Shop not found');
         }
-        // delete all images from storage
+        
         const images = await ProductImage.findAll({
             where: {
                 productId
