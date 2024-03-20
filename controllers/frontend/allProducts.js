@@ -27,7 +27,7 @@ exports.getAllProducts = async (req, res) => {
         } else {
             sortQuery.push(['new_price', 'DESC']);
         }
-        const attributes = ['id', 'name', 'new_price', 'old_price', 'slug'];
+        const attributes = ['id', 'name', 'new_price', 'old_price', 'slug','image'];
 
         const products = await Product.findAll({
             attributes,

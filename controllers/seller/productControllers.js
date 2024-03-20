@@ -110,7 +110,7 @@ const createProduct = async (req, res) => {
             });
         }
         console.error(error);
-        sendResponse(res, 500, false, error.message);
+        sendResponse(res, 500, false, error.message,error);
     }
 };
 
