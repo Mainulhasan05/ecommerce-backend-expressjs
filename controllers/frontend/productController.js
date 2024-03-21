@@ -57,10 +57,7 @@ const getProductBySlug=async(req,res)=>{
 
         if(!product){
             return sendResponse(res,404,false,'Product not found');
-        }
-
-        
-        
+        }       
 
         product.views=product.views+1;
         

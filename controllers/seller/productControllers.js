@@ -29,6 +29,9 @@ const getAllProducts = async (req, res) => {
 const createProduct = async (req, res) => {
     try {
         const { name, description, old_price, new_price, categoryIds, quantity,status } = req.body;
+        console.log("categoryIds")
+        console.log(typeof categoryIds)
+        console.log(categoryIds)
         if (name.length < 3) {
             trackActivity(req.id, `failed to create product ${name} for name length less than 3 characters`);
             return sendResponse(res, 400, false, 'Product name must be at least 3 characters');
@@ -79,7 +82,16 @@ const createProduct = async (req, res) => {
         trackActivity(sellerId, `created product ${product.name}`);
         
 
-        await product.addCategories(categoryIds);
+        // await product.addCategories(categoryIds);
+        // const categories = await Category.findAll({
+        //     where: {
+        //         id: JSON.parse(categoryIds)
+        //     }
+        // });
+        // console.log("categories")
+        // console.log(categories)
+        await product.addCategories(JSON.parse(categoryIds));
+
         let imageUrl="";
         if (req.files && req.files.length > 0) {
             const images = req.files.map(file => ({
