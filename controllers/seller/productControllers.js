@@ -1,5 +1,6 @@
 const Product = require('../../models/common/productModel');
 const ProductImage = require('../../models/common/product_helpers/productImagesModel');
+const Category=require('../../models/common/categoryModel');
 const Shop=require('../../models/seller/shopModel');
 const OrderItem=require('../../models/common/orderItems');
 const {trackActivity}=require('../trackActivityController');
@@ -116,7 +117,28 @@ const createProduct = async (req, res) => {
 
 const getProductById = async (req, res) => {
     try {
-        // Logic to fetch a product by ID
+        const productId = req.params.id;
+        const product = await Product.findByPk(productId, {
+            include: [
+                {
+                    model: ProductImage,
+                    attributes: ['url'],
+                    as: 'images'
+                },
+                {
+                    model: Category,
+                    attributes: ['id', 'name'],
+                    as: 'categories'
+                }
+            ]
+            
+        });
+
+        if (!product) {
+            return sendResponse(res, 404, false, 'Product not found');
+        }
+
+        sendResponse(res, 200, true, 'Product fetched successfully', product);
     } catch (error) {
         console.error(error);
         sendResponse(res, 500, false, error.message);

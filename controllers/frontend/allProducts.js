@@ -6,7 +6,7 @@ exports.getAllProducts = async (req, res) => {
     try {
         // Get page, price range, price=asc/desc,
         const page = parseInt(req.query.page, 10) || 1;
-        const limit = parseInt(req.query.limit, 10) || 10;
+        const limit = parseInt(req.query.limit, 20) || 20;
         const priceRange = req.query.priceRange || "0-100000";
         const price = req.query.price || "asc";
         const search = req.query.search || "";

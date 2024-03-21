@@ -12,7 +12,7 @@ require('./models/associations/ProductAttributeValue');
 require('./models/associations/OrderItemProduct');
 require('./models/associations/ProductShop');
 
-db.sync({alter:true})
+db.sync({alter:false})
   .then(() => {
     console.log('Database connected');
   })
