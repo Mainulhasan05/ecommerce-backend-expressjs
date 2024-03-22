@@ -1,7 +1,7 @@
 const Category = require('../../models/common/categoryModel');
 const Shop = require('../../models/seller/shopModel');
 const Product = require('../../models/common/productModel');
-
+const Banner =require('../../models/common/bannerModel');
 
 const sendResponse = require('../../utils/sendResponse');
 const getHomeData = async (req, res) => {
@@ -62,8 +62,18 @@ const getHomeData = async (req, res) => {
             status: 'active'
         }
     });
+    
+    const banners=await Banner.findAll({
+        limit: 10,
+        attributes: ['id','imageUrl','buttonText','pageUrl',],
+        order: [['sortValue', 'DESC']],
+        where: {
+            status: 'active'
+        }
+    });
 
     const data = {
+        banners,
         categories,
         featuredShops: shops,
         newArrivals,

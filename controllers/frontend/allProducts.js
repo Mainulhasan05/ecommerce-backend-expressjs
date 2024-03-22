@@ -47,7 +47,8 @@ exports.getAllProducts = async (req, res) => {
             products,
             totalPages,
             totalProducts,
-            currentPage: page
+            currentPage: page,
+            per_page: limit
         });
     } catch (err) {
         sendResponse(res, 500, false, err.message, err);
