@@ -21,6 +21,8 @@ exports.getAllProducts = async (req, res) => {
         }
 
         let sortQuery = [];
+        // decending order or createdAt
+        sortQuery.push(['createdAt', 'DESC']);
 
         if (price === "asc") {
             sortQuery.push(['new_price', 'ASC']);
