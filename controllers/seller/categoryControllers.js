@@ -121,7 +121,7 @@ const updateCategoryById = async (req, res) => {
     if(description){
       obj.description=description;
     }
-    if(parentId){
+    if(parentId && parentId!=null){
       obj.parentId=parentId;
     }
     if(sortValue){
