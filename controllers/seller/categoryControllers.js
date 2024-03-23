@@ -104,7 +104,7 @@ const updateCategoryById = async (req, res) => {
   const { id } = req.params;
   try {
     const { name, description,  parentId,sortValue,isFeatured,sideMenu } = req.body;
-    // check if there is image
+    
     let image;
     if(req.file){
       image ="/uploads/categories/"+ req.file.filename;
