@@ -145,7 +145,7 @@ const deleteCategoryById = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    sendResponse(res, 500, false, 'Server Error', null);
+    sendResponse(res, 500, false, error.message, null);
   }
 };
 

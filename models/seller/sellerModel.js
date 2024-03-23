@@ -79,6 +79,10 @@ const Seller = sequelize.define('Seller', {
       allowNull: false,
       defaultValue: 0.0
   },
+  last_seen: {
+      type: DataTypes.DATE,
+      allowNull: true
+  },
   // Add more fields as necessary
 }, {
   timestamps: true,

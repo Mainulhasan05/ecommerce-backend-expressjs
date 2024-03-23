@@ -29,9 +29,7 @@ const getAllProducts = async (req, res) => {
 const createProduct = async (req, res) => {
     try {
         const { name, description, old_price, new_price, categoryIds, quantity,status } = req.body;
-        console.log("categoryIds")
-        console.log(typeof categoryIds)
-        console.log(categoryIds)
+        
         if (name.length < 3) {
             trackActivity(req.id, `failed to create product ${name} for name length less than 3 characters`);
             return sendResponse(res, 400, false, 'Product name must be at least 3 characters');
