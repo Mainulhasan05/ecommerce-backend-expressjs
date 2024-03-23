@@ -19,7 +19,7 @@ router.get('/child/:id', getChildCategoriesByParentId);
 router.post('/',verifyToken, upload.single('image'), createCategory);
 router.get('/', getAllCategories);
 
-router.get('/:id',verifyToken, getCategoryById);
+router.get('/:id', getCategoryById);
 router.put('/:id',verifyToken, updateCategoryById);
 router.delete('/:id',verifyToken, deleteCategoryById);
 

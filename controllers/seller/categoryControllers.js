@@ -8,7 +8,7 @@ const path = require('path');
 // Create a new category
 const createCategory = async (req, res) => {
   try {
-    const { name, description,  parentId,sortValue,isFeatured } = req.body;
+    const { name, description,  parentId,sortValue,isFeatured,sideMenu } = req.body;
     let slug=generateSlug(name);
     // check if the category already exists of same slug, if have then add time
     const categorySlug = await Category.findOne({ where: { slug } });
@@ -39,6 +39,9 @@ const createCategory = async (req, res) => {
     if(isFeatured){
       obj.isFeatured=isFeatured;
     }
+    if(sideMenu){
+      obj.sideMenu=sideMenu;
+    }
     obj.slug=slug;
     obj.image=image;
     obj.createdBy=createdBy;
@@ -58,6 +61,7 @@ const getAllCategories = async (req, res) => {
   try {
     const { pageNumber } = req.query;
     const page = pageNumber || 0;
+    const limit = req.query.limit || 20;
     const categories = await Category.findAll({
       attributes: ['id', 'name', 'slug', 'image', 'sortValue', 'status', 'parentId'],
       include: [
@@ -70,12 +74,12 @@ const getAllCategories = async (req, res) => {
       ],
       order: [[{model: Category, as: 'children'}, 'createdAt', 'DESC']],
         offset: 10 * page,
-        limit: 10,
+        limit: limit,
     });
     sendResponse(res, 200, true, 'Categories retrieved successfully', categories);
   } catch (error) {
     console.error(error);
-    sendResponse(res, 500, false, 'Server Error', null);
+    sendResponse(res, 500, false, error.message, null);
   }
 };
 
@@ -91,7 +95,7 @@ const getCategoryById = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    sendResponse(res, 500, false, 'Server Error', null);
+    sendResponse(res, 500, false, error.message, null);
   }
 };
 
@@ -109,7 +113,7 @@ const updateCategoryById = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    sendResponse(res, 500, false, 'Server Error', null);
+    sendResponse(res, 500, false, error.message, null);
   }
 };
 
