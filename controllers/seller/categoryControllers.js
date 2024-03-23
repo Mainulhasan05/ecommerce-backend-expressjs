@@ -103,14 +103,42 @@ const getCategoryById = async (req, res) => {
 const updateCategoryById = async (req, res) => {
   const { id } = req.params;
   try {
-    const updatedCategory = await Category.update(req.body, {
-      where: { id }
-    });
-    if (updatedCategory[0] === 1) {
-      sendResponse(res, 200, true, 'Category updated successfully', null);
-    } else {
-      sendResponse(res, 404, false, 'Category not found', null);
+    const { name, description,  parentId,sortValue,isFeatured,sideMenu } = req.body;
+    // check if there is image
+    let image;
+    if(req.file){
+      image ="/uploads/categories/"+ req.file.filename;
     }
+    const updatedBy = req.id;
+    const category = await Category.findByPk(id);
+    if (!category) {
+      return sendResponse(res, 404, false, 'Category not found', null);
+    }
+    const obj={}
+    if(name){
+      obj.name=name;
+    }
+    if(description){
+      obj.description=description;
+    }
+    if(parentId){
+      obj.parentId=parentId;
+    }
+    if(sortValue){
+      obj.sortValue=sortValue;
+    }
+    if(isFeatured){
+      obj.isFeatured=isFeatured;
+    }
+    if(sideMenu){
+      obj.sideMenu=sideMenu;
+    }
+    if(image){
+      obj.image=image;
+    }
+    obj.updatedBy=updatedBy;
+    const updatedCategory = await category.update(obj);
+    sendResponse(res, 200, true, 'Category updated successfully', updatedCategory);
   } catch (error) {
     console.error(error);
     sendResponse(res, 500, false, error.message, null);

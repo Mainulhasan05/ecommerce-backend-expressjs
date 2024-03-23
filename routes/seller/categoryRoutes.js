@@ -20,7 +20,7 @@ router.post('/',verifyToken, upload.single('image'), createCategory);
 router.get('/', getAllCategories);
 
 router.get('/:id', getCategoryById);
-router.put('/:id',verifyToken, updateCategoryById);
+router.put('/:id',verifyToken,upload.single('image'), updateCategoryById);
 router.delete('/:id',verifyToken, deleteCategoryById);
 
 
