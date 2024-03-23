@@ -1,6 +1,7 @@
 const Category = require('../../models/common/categoryModel');
 const sendResponse = require('../../utils/sendResponse');
 const generateSlug = require('../../utils/generateSlug');
+const deleteImage = require('../../utils/deleteImage');
 const fs = require('fs');
 const path = require('path');
 // Controller functions for category CRUD operations
@@ -134,6 +135,9 @@ const updateCategoryById = async (req, res) => {
       obj.sideMenu=sideMenu;
     }
     if(image){
+      if (category.image) {
+        deleteImage(category.image);
+      }
       obj.image=image;
     }
     obj.updatedBy=updatedBy;
