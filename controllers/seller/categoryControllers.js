@@ -56,7 +56,7 @@ const createCategory = async (req, res) => {
 // Get all categories
 const getAllCategories = async (req, res) => {
   try {
-    const { pageNumber } = req.params;
+    const { pageNumber } = req.query;
     const page = pageNumber || 0;
     const categories = await Category.findAll({
       attributes: ['id', 'name', 'slug', 'image', 'sortValue', 'status', 'parentId'],
@@ -149,11 +149,44 @@ const deleteCategoryById = async (req, res) => {
   }
 };
 
+const getParentCategories = async (req, res) => {
+  try {
+    const categories = await Category.findAll({
+      attributes: ['id', 'name', 'slug', ],
+      where: {
+        parentId: null,
+      },
+    });
+    sendResponse(res, 200, true, 'Categories retrieved successfully', categories);
+  } catch (error) {
+    console.error(error);
+    sendResponse(res, 500, false, error.message, null);
+  }
+};
+
+const getChildCategoriesByParentId = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const categories = await Category.findAll({
+      attributes: ['id', 'name', 'slug', 'image', 'sortValue', 'status', 'parentId'],
+      where: {
+        parentId: id,
+      },
+    });
+    sendResponse(res, 200, true, 'Categories retrieved successfully', categories);
+  } catch (error) {
+    console.error(error);
+    sendResponse(res, 500, false, error.message, null);
+  }
+};
+
 
 module.exports = {
   createCategory,
   getAllCategories,
   getCategoryById,
   updateCategoryById,
-  deleteCategoryById
+  deleteCategoryById,
+  getParentCategories,
+  getChildCategoriesByParentId
 };

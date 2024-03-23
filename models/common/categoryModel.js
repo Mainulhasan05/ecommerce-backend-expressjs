@@ -47,6 +47,11 @@ const Category = sequelize.define('Category', {
         allowNull: true,
         defaultValue: null
     },
+    sideMenu:{
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
     isFeatured: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
