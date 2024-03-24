@@ -80,14 +80,6 @@ const createProduct = async (req, res) => {
         trackActivity(sellerId, `created product ${product.name}`);
         
 
-        // await product.addCategories(categoryIds);
-        // const categories = await Category.findAll({
-        //     where: {
-        //         id: JSON.parse(categoryIds)
-        //     }
-        // });
-        // console.log("categories")
-        // console.log(categories)
         await product.addCategories(JSON.parse(categoryIds));
 
         let imageUrl="";
@@ -96,7 +88,6 @@ const createProduct = async (req, res) => {
                 productId: product.id,
                 url: `/${file.path}`
             }));
-
 
             await ProductImage.bulkCreate(images);
             
@@ -157,23 +148,89 @@ const getProductById = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     try {
-        // Extract product information from the request body
-        const { name, description, price } = req.body;
-        const productId = req.params.productId;
+        
+        const { name, description, old_price, new_price, categoryIds, quantity,status } = req.body;
+        const productId = req.params.id;
 
-        // Update the product
+        // validate name,new_price, old_price, quantity, categoryIds
+        if (name.length < 3) {
+            trackActivity(req.id, `failed to update product ${name} for name length less than 3 characters`);
+            return sendResponse(res, 400, false, 'Product name must be at least 3 characters');
+        }
+        if (old_price < 0 || new_price < 0) {
+            trackActivity(req.id, `failed to update product ${name} for negative price`);
+            return sendResponse(res, 400, false, 'Price cannot be negative');
+        }
+        if(categoryIds.length<1){
+            trackActivity(req.id, `failed to update product ${name} for no category selected`);
+            return sendResponse(res, 400, false, 'Select at least one category');
+        }
+        // check if product exists
+        const product = await Product.findByPk(productId);
+        if (!product) {
+            return sendResponse(res, 404, false, 'Product not found');
+        }
+        
+        // check if the product belongs to the seller
+        if (product.sellerId !== req.id) {
+            return sendResponse(res, 403, false, 'You are not authorized to update this product');
+        }
+        // update product
         await Product.update({
             name,
             description,
-            price
+            old_price,
+            new_price,
+            quantity,
+            status
         }, {
             where: {
                 id: productId
             }
         });
-        await trackActivity(req.id, `updated product ${name}`);
+        // update categories
+        await product.setCategories(JSON.parse(categoryIds));
+        
+        // update images
+        if (req.files && req.files.length > 0) {
+            // delete old images
+            const images = await ProductImage.findAll({
+                where: {
+                    productId
+                }
+            });
+            images.forEach(image => {
+                deleteImage(image.url);
+            });
+            await ProductImage.destroy({
+                where: {
+                    productId
+                }
+            });
 
-        sendResponse(res, 200, true, 'Product updated successfully');
+            
+            const newImages = req.files.map(file => ({
+                productId,
+                url: `/${file.path}`
+            }));
+            await ProductImage.bulkCreate(newImages);
+            await Product.update({ image: newImages[0].url }, { where: { id: productId } });            
+        }
+        trackActivity(req.id, `updated product ${product.name}`);
+        // const products = await Product.findAll({
+        //     where: {
+        //         sellerId
+        //     },
+        //     attributes: ['id', 'name', 'slug', 'image','old_price', 'new_price', 'views','quantity', 'status'],
+        //     limit: 20,
+        // });
+        // get updated product
+        const updatedProduct = await Product.findByPk(productId,{
+            attributes: ['id', 'name', 'slug', 'image','old_price', 'new_price', 'views','quantity', 'status'],
+        })
+        
+        sendResponse(res, 200, true, 'Product updated successfully', updatedProduct);
+
     } catch (error) {
         console.error(error);
         sendResponse(res, 500, false, error.message);

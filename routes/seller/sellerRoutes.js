@@ -35,10 +35,11 @@ router.delete('/shop/:id', verifyToken, deleteShop);
 router.get('/my-shop', verifyToken, getMyShop);
 
 // product routes, multiple images upload
-router.post('/product', require('../../utils/multerConfig')('uploads/products').array('images', 5), verifyToken, createProduct);
+router.put('/product/:id', verifyToken,require('../../utils/multerConfig')('uploads/products').array('images', 5), updateProduct);
+router.post('/product',verifyToken, require('../../utils/multerConfig')('uploads/products').array('images', 5), verifyToken, createProduct);
 router.get('/product/:id', getProductById);
 router.get('/products',verifyToken, getAllProducts);
-router.put('/product/:id', verifyToken, updateProduct);
+
 router.delete('/product/:id', verifyToken, deleteProduct);
 
 // activity routes
