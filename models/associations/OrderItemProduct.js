@@ -1,6 +1,6 @@
 const Product = require('../common/productModel');
-const Order = require('../seller/orderModel');
-const OrderItem = require('../seller/orderItems');
+const Order=require('../common/orderModel');
+const OrderItem=require('../common/orderItems');
 
 OrderItem.belongsTo(Product, { foreignKey: 'productId' });
 OrderItem.belongsTo(Order, { foreignKey: 'orderId' });

@@ -235,7 +235,7 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
     try {
         // delete all images, product, decrease shop productCount
-        const productId = req.params.productId;
+        const productId = req.params.id;
         const orderItem=await OrderItem.findOne({where:{productId}});
         if(orderItem){
             return sendResponse(res, 400, false, 'Product cannot be deleted because it is in an order');
@@ -269,7 +269,7 @@ const deleteProduct = async (req, res) => {
         });
         await Shop.update({productCount:shop.productCount-1},{where:{id:shop.id}});
         await trackActivity(req.id, `deleted product ${product.name}`);
-        sendResponse(res, 200, true, 'Product deleted successfully');
+        sendResponse(res, 200, true, 'Product deleted successfully', product);
     } catch (error) {
         console.error(error);
         sendResponse(res, 500, false, error.message);
