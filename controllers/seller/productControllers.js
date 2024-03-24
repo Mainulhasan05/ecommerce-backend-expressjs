@@ -217,14 +217,7 @@ const updateProduct = async (req, res) => {
             await Product.update({ image: newImages[0].url }, { where: { id: productId } });            
         }
         trackActivity(req.id, `updated product ${product.name}`);
-        // const products = await Product.findAll({
-        //     where: {
-        //         sellerId
-        //     },
-        //     attributes: ['id', 'name', 'slug', 'image','old_price', 'new_price', 'views','quantity', 'status'],
-        //     limit: 20,
-        // });
-        // get updated product
+        
         const updatedProduct = await Product.findByPk(productId,{
             attributes: ['id', 'name', 'slug', 'image','old_price', 'new_price', 'views','quantity', 'status'],
         })
