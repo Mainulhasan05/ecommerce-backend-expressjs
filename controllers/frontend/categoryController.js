@@ -38,27 +38,27 @@ const getProductsByCategory = async (req, res) => {
             sortQuery.push(['new_price', 'DESC']);
         }
 
+        
         const category = await Category.findOne({
-            where: {
-                slug
-            },
+            where: { slug },
             attributes: ['id', 'name', 'slug', 'image'],
             include: [
                 {
                     model: Product,
-                    as: 'products', // Note the change here to include categories association
+                    as: 'products',
                     attributes: ['id', 'name', 'slug', 'image', 'old_price', 'new_price'],
                     where: query,
-                    
                     order: sortQuery,
-                    limit: limit,
+                    limit,
                     offset: (page - 1) * limit
                 }
             ]
         });
-        
 
-        
+        if (!category) {
+            return sendResponse(res, 404, false, 'Category not found');
+        }
+
         sendResponse(res, 200, true, 'Products fetched successfully', category);
     } catch (error) {
         console.error(error);
