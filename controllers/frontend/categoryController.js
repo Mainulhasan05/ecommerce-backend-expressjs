@@ -43,7 +43,10 @@ const getProductsByCategory = async (req, res) => {
             where: { slug },
             attributes: ['id', 'name', 'slug', 'image'],
             include: [
-                Product
+                {
+                    model: Product,
+                    as: 'products',
+                }
             ]
         });
 
