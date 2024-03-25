@@ -19,8 +19,13 @@ const getProductsByCategory = async (req, res) => {
             const priceArr = priceRange.split("-");
             query.new_price = { [Op.gte]: parseInt(priceArr[0], 10), [Op.lte]: parseInt(priceArr[1], 10) };
         }
-        // use slug
-        query.slug = slug;
+        if(req.query?.price === "asc"){
+            query.new_price = { [Op.gte]: 0, [Op.lte]: 100000 };
+        }
+        if(req.query?.price === "desc"){
+            query.new_price = { [Op.gte]: 0, [Op.lte]: 100000 };
+        }
+        
 
         let sortQuery = [];
         // decending order or createdAt
