@@ -7,42 +7,47 @@ const sendResponse = require('../../utils/sendResponse');
 const getProductsByCategory = async (req, res) => {
     try {
         const { slug } = req.params;
+        const page = parseInt(req.query.page, 10) || 1;
+        const limit = parseInt(req.query.limit, 20) || 20;
+        const priceRange = req.query.priceRange || "0-100000";
+        // if price is provided then use it to sort products, otherwise use createdAt
+        const price = req.query.price || "asc";
+
+        let query = {};
+        if (priceRange) {
+            const priceArr = priceRange.split("-");
+            query.new_price = { [Op.gte]: parseInt(priceArr[0], 10), [Op.lte]: parseInt(priceArr[1], 10) };
+        }
+        // use slug
+        query.slug = slug;
+
+        let sortQuery = [];
+        // decending order or createdAt
+        sortQuery.push(['createdAt', 'DESC']);
+
+        if (price === "asc") {
+            sortQuery.push(['new_price', 'ASC']);
+        }
+        if(price === "desc"){
+            sortQuery.push(['new_price', 'DESC']);
+        }
+
         const category = await Category.findOne({
             where: {
                 slug
             },
-            attributes:['id','name','slug','image',],
             include: [
                 {
-                    model: Category,
-                    as: 'children',
-                    include: [
-                        {
-                            model: Product,
-                            as: 'products',
-                            attributes: ['id', 'name', 'slug', 'image', 'old_price', 'new_price', 'quantity', 'status'],
-                            where: {
-                                status: 'active'
-                            },
-                            through: {
-                                attributes: []
-                            }
-                        }
-                    ]
-                },
-                {
                     model: Product,
-                    as: 'products',
-                    attributes: ['id', 'name', 'slug', 'image', 'old_price', 'new_price', 'quantity', 'status'],
-                    where: {
-                        status: 'active'
-                    },
-                    through: {
-                        attributes: []
-                    }
+                    attributes: ['id', 'name', 'slug', 'image', 'old_price', 'new_price'],
+                    where: query,
+                    order: sortQuery,
+                    limit: limit,
+                    offset: (page - 1) * limit
                 }
             ]
         });
+
         
         sendResponse(res, 200, true, 'Products fetched successfully', category);
     } catch (error) {
