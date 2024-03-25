@@ -1,6 +1,7 @@
 const Category = require('../../models/common/categoryModel');
 const Shop = require('../../models/seller/shopModel');
 const Product = require('../../models/common/productModel');
+const { Op } = require('sequelize');
 const sendResponse = require('../../utils/sendResponse');
 
 // get products by category
@@ -36,23 +37,29 @@ const getProductsByCategory = async (req, res) => {
             where: {
                 slug
             },
+            attributes: ['id', 'name', 'slug', 'image'],
             include: [
                 {
                     model: Product,
+                    as: 'products', // Note the change here to include categories association
                     attributes: ['id', 'name', 'slug', 'image', 'old_price', 'new_price'],
                     where: query,
+                    through: {
+                        attributes: [] // If you don't want the junction table attributes
+                    },
                     order: sortQuery,
                     limit: limit,
                     offset: (page - 1) * limit
                 }
             ]
         });
+        
 
         
         sendResponse(res, 200, true, 'Products fetched successfully', category);
     } catch (error) {
         console.error(error);
-        sendResponse(res, 500, false, error.message);
+        sendResponse(res, 500, false, error.message,error);
     }
 };
 
