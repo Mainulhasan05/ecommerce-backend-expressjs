@@ -44,9 +44,7 @@ const getProductsByCategory = async (req, res) => {
                     as: 'products', // Note the change here to include categories association
                     attributes: ['id', 'name', 'slug', 'image', 'old_price', 'new_price'],
                     where: query,
-                    through: {
-                        attributes: [] // If you don't want the junction table attributes
-                    },
+                    
                     order: sortQuery,
                     limit: limit,
                     offset: (page - 1) * limit
