@@ -9,6 +9,18 @@ const Order = sequelize.define('Order', {
     },
     customerId: {
         type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    customerName: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    customerPhoneNumber: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    customerAddress: {
+        type: DataTypes.STRING,
         allowNull: false
     },
     orderDate: {
@@ -21,8 +33,8 @@ const Order = sequelize.define('Order', {
         allowNull: true
     },
     totalAmount: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false
+        type: DataTypes.INTEGER,
+        allowNull: true
     }
   },{
     timestamps: true,

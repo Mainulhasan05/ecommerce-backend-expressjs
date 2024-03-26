@@ -40,14 +40,39 @@ const getProductsByCategory = async (req, res) => {
                 {
                     model: Product,
                     as: 'products',
-                    through: { attributes: [] },                    
+                    through: { attributes: [] },
+                    attributes: ['id', 'name', 'new_price', 'old_price', 'slug', 'image','createdAt'],
+                    where: query,
+                    order: sortQuery,            
                 }
             ]
         });
+        // totalPages,
+        // totalProducts,
+        // currentPage: page,
+        // per_page: limit
+        const totalProducts=await Product.count({
+            include: [
+                {
+                    model: Category,
+                    where: { slug },
+                    as: 'categories',
+                }
+            ],
+            where: query
+        });
+        
+        const totalPages=Math.ceil(totalProducts/limit);
+        
         if (!category) {
             return sendResponse(res, 404, false, 'Category not found');
         }
-        sendResponse(res, 200, true, 'Products fetched successfully', category);
+        sendResponse(res, 200, true, 'Products fetched successfully', {
+            category,totalPages,
+            totalProducts,
+            currentPage: page,
+            per_page: limit
+        });
     } catch (error) {
         console.error(error);
         sendResponse(res, 500, false, error.message,error);

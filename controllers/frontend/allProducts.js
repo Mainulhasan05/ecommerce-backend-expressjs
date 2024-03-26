@@ -35,8 +35,7 @@ exports.getAllProducts = async (req, res) => {
         sortQuery.push(['createdAt', 'DESC']);
         const attributes = ['id', 'name', 'new_price', 'old_price', 'slug','image','createdAt'];
         let products;
-        if (categorySlug) { // New: Check if category slug is present
-            // Fetch products filtered by category slug
+        if (categorySlug) { 
             products = await Product.findAll({
                 attributes,
                 include: [{
