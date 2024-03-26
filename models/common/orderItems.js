@@ -2,6 +2,8 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../db_config/db');
 const Product = require('../common/productModel')
+const Seller = require('../seller/sellerModel')
+const Order=require('./orderModel');
 
 const OrderItem = sequelize.define('OrderItem', {
     id: {
@@ -51,6 +53,9 @@ const OrderItem = sequelize.define('OrderItem', {
     timestamps: true,
   });
 
+Order.hasMany(OrderItem, {foreignKey: 'orderId', as: 'orderItems'});
 OrderItem.belongsTo(Product, {foreignKey: 'productId', as: 'product'});
+OrderItem.belongsTo(Seller, {foreignKey: 'sellerId', as: 'seller'});
+
 
 module.exports = OrderItem;

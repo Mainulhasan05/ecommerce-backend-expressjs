@@ -8,6 +8,7 @@ const { getAllProducts,
     getProductById,
     updateProduct,
     deleteProduct } = require('../../controllers/seller/productControllers');
+const orderControllers =  require('../../controllers/seller/orderControllers');
 
 const {getDashboard}=require('../../controllers/seller/dashboardControllers');
     // activity
@@ -48,6 +49,9 @@ router.get('/activities/:id',verifyToken,getActivitiesForSeller);
 
 // dashboard
 router.get('/dashboard',verifyToken,getDashboard);
+
+// order routes
+router.get('/orders', verifyToken, orderControllers.getAllOrdersForSeller);
 
 
 
