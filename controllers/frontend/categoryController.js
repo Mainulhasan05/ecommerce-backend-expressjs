@@ -7,7 +7,8 @@ const sendResponse = require('../../utils/sendResponse');
 // get products by category
 const getProductsByCategory = async (req, res) => {
     try {
-        const { slug } = req.params;
+        // receive the slug from params, if not present then receive from query
+        const slug = req.params.slug || req.query.slug;
         const page = parseInt(req.query.page, 10) || 1;
         const limit = parseInt(req.query.limit, 20) || 20;
         const priceRange = req.query.priceRange || "0-100000";
@@ -41,12 +42,13 @@ const getProductsByCategory = async (req, res) => {
         
         const category = await Category.findOne({
             where: { slug },
-            attributes: ['id', 'name', 'slug', 'image'],
+            attributes: ['id', 'name', 'slug', 'image','description'],
             include: [
                 {
                     model: Product,
                     as: 'products',
                     through: { attributes: [] },
+
                     
                 }
             ]
