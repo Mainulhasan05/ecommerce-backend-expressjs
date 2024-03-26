@@ -29,6 +29,10 @@ const OrderItem = sequelize.define('OrderItem', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    sellerId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
     status: {
         type: DataTypes.ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled'),
         allowNull: false,

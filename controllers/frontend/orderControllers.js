@@ -132,6 +132,7 @@ exports.createOrder=async(req,res)=>{
                 productId: products[i].id,
                 quantity: quantity[i],
                 unitPrice: products[i].new_price,
+                sellerId: products[i].sellerId,
                 totalAmount: products[i].new_price * quantity[i]
             });
         }
