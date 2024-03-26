@@ -1,5 +1,5 @@
-const Order=require('../../models/seller/orderModel');
-const OrderItem=require('../../models/seller/orderItems');
+const Order=require('../../models/common/orderModel');
+const OrderItem=require('../../models/common/orderItems');
 const Product=require('../../models/common/productModel');
 const {trackActivity}=require('../trackActivityController');
 const sendResponse=require('../../utils/sendResponse');
@@ -143,3 +143,28 @@ exports.createOrder=async(req,res)=>{
         sendResponse(res,500,err.message,err);
     }
 }
+
+exports.getOrders=async(req,res)=>{
+    try{
+        const orders=await Order.findAll({include:OrderItem});
+        sendResponse(res,200,"All Orders",orders);
+    }
+    catch(err){
+        sendResponse(res,500,err.message,err);
+    }
+}
+
+exports.getOrder=async(req,res)=>{
+    try{
+        const order=await Order.findByPk(req.params.id,{include:OrderItem});
+        if(!order){
+            sendResponse(res,404,"Order Not Found",null);
+            return;
+        }
+        sendResponse(res,200,"Order",order);
+    }
+    catch(err){
+        sendResponse(res,500,err.message,err);
+    }
+}
+
