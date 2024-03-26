@@ -43,6 +43,7 @@ exports.getAllProducts = async (req, res) => {
                     model: Category,
                     where: { slug: categorySlug },
                     attributes: [],
+                    as: 'categories',
                 }],
                 where: query,
                 order: sortQuery,
