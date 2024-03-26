@@ -33,7 +33,7 @@ exports.getAllProducts = async (req, res) => {
             sortQuery.push(['new_price', 'DESC']);
         }
         sortQuery.push(['createdAt', 'DESC']);
-        const attributes = ['id', 'name', 'new_price', 'old_price', 'slug','image'];
+        const attributes = ['id', 'name', 'new_price', 'old_price', 'slug','image','createdAt'];
         let products;
         if (categorySlug) { // New: Check if category slug is present
             // Fetch products filtered by category slug

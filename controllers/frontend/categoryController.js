@@ -35,7 +35,7 @@ const getProductsByCategory = async (req, res) => {
         }
         const category = await Category.findOne({
             where: { slug },
-            attributes: ['id', 'name', 'slug', 'image','description'],
+            attributes: ['id', 'name', 'slug', 'image','description',],
             include: [
                 {
                     model: Product,
