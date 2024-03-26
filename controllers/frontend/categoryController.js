@@ -46,6 +46,8 @@ const getProductsByCategory = async (req, res) => {
                 {
                     model: Product,
                     as: 'products',
+                    through: { attributes: [] },
+                    
                 }
             ]
         });

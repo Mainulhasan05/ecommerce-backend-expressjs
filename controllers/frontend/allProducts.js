@@ -21,16 +21,18 @@ exports.getAllProducts = async (req, res) => {
         }
 
         let sortQuery = [];
-        // decending order or createdAt
-        sortQuery.push(['createdAt', 'DESC']);
+        
+        
 
-        if (price === "asc") {
+        if (req.query.price === "asc") {
             sortQuery.push(['new_price', 'ASC']);
-        } else {
+        }
+        if(req.query.price === "desc") {
             sortQuery.push(['new_price', 'DESC']);
         }
+        sortQuery.push(['createdAt', 'DESC']);
         const attributes = ['id', 'name', 'new_price', 'old_price', 'slug','image'];
-
+        console.log(query, sortQuery, attributes, page, limit)
         const products = await Product.findAll({
             attributes,
             where: query,
