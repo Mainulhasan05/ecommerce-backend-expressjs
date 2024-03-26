@@ -7,11 +7,11 @@ const OrderItems=require('./models/common/orderItems')
 // const sellerRoutes=require('./routes/seller/sellerRoutes');
 // const categoryRoutes=require('./routes/seller/categoryRoutes');
 // const apiRoutes=require('./routes/api/apiRoutes');
-require('./models/associations/ProductCategories');
-require('./models/associations/ProductImages');
-require('./models/associations/ProductAttributeValue');
-require('./models/associations/OrderItemProduct');
-require('./models/associations/ProductShop');
+// require('./models/associations/ProductCategories');
+// require('./models/associations/ProductImages');
+// require('./models/associations/ProductAttributeValue');
+// require('./models/associations/OrderItemProduct');
+// require('./models/associations/ProductShop');
 
 db.sync({alter:true})
   .then(() => {
