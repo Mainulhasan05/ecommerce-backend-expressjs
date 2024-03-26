@@ -1,15 +1,17 @@
 const { Op } = require('sequelize');
 const Product = require('../../models/common/productModel');
+const Category = require('../../models/common/categoryModel');
 const sendResponse = require('../../utils/sendResponse');
 
 exports.getAllProducts = async (req, res) => {
     try {
-        // Get page, price range, price=asc/desc,
+        
         const page = parseInt(req.query.page, 10) || 1;
         const limit = parseInt(req.query.limit, 20) || 20;
         const priceRange = req.query.priceRange || "0-100000";
         const price = req.query.price || "asc";
         const search = req.query.search || "";
+        const categorySlug = req.query.category;
 
         let query = {};
         if (search) {
@@ -32,15 +34,31 @@ exports.getAllProducts = async (req, res) => {
         }
         sortQuery.push(['createdAt', 'DESC']);
         const attributes = ['id', 'name', 'new_price', 'old_price', 'slug','image'];
-        console.log(query, sortQuery, attributes, page, limit)
-        const products = await Product.findAll({
-            attributes,
-            where: query,
-            order: sortQuery,
-            limit: limit,
-            offset: (page - 1) * limit
-        });
-
+        let products;
+        if (categorySlug) { // New: Check if category slug is present
+            // Fetch products filtered by category slug
+            products = await Product.findAll({
+                attributes,
+                include: [{
+                    model: Category,
+                    where: { slug: categorySlug },
+                    attributes: [],
+                }],
+                where: query,
+                order: sortQuery,
+                limit: limit,
+                offset: (page - 1) * limit
+            });
+        } else {
+            // Fetch all products without filtering by category
+            products = await Product.findAll({
+                attributes,
+                where: query,
+                order: sortQuery,
+                limit: limit,
+                offset: (page - 1) * limit
+            });
+        }
         const totalProducts = await Product.count({
             where: query
         });

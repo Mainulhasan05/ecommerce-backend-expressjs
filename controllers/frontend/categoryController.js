@@ -7,12 +7,10 @@ const sendResponse = require('../../utils/sendResponse');
 // get products by category
 const getProductsByCategory = async (req, res) => {
     try {
-        // receive the slug from params, if not present then receive from query
         const slug = req.params.slug || req.query.slug;
         const page = parseInt(req.query.page, 10) || 1;
         const limit = parseInt(req.query.limit, 20) || 20;
         const priceRange = req.query.priceRange || "0-100000";
-        // if price is provided then use it to sort products, otherwise use createdAt
         const price = req.query.price || "asc";
 
         let query = {};
@@ -26,10 +24,7 @@ const getProductsByCategory = async (req, res) => {
         if(req.query?.price === "desc"){
             query.new_price = { [Op.gte]: 0, [Op.lte]: 100000 };
         }
-        
-
         let sortQuery = [];
-        // decending order or createdAt
         sortQuery.push(['createdAt', 'DESC']);
 
         if (price === "asc") {
@@ -38,8 +33,6 @@ const getProductsByCategory = async (req, res) => {
         if(price === "desc"){
             sortQuery.push(['new_price', 'DESC']);
         }
-
-        
         const category = await Category.findOne({
             where: { slug },
             attributes: ['id', 'name', 'slug', 'image','description'],
@@ -47,17 +40,13 @@ const getProductsByCategory = async (req, res) => {
                 {
                     model: Product,
                     as: 'products',
-                    through: { attributes: [] },
-
-                    
+                    through: { attributes: [] },                    
                 }
             ]
         });
-
         if (!category) {
             return sendResponse(res, 404, false, 'Category not found');
         }
-
         sendResponse(res, 200, true, 'Products fetched successfully', category);
     } catch (error) {
         console.error(error);
