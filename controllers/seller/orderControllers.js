@@ -53,7 +53,7 @@ exports.getAllOrdersForSeller = async (req, res) => {
             ]
         });
 
-        return sendResponse(res, 200, 'Orders fetched successfully', orders);
+        return sendResponse(res, 200, true,'Orders fetched successfully', orders);
     } catch (error) {
         console.error('Error fetching orders for seller:', error);
         return sendResponse(res, 500, error.message, null);
