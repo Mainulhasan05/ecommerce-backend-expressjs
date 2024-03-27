@@ -28,15 +28,8 @@ exports.getAllOrdersForSeller = async (req, res) => {
         // Fetch all order items associated with the seller
         const orderItems = await OrderItem.findAll({
             where: { sellerId: sellerId },
-            include: [
-                { 
-                    model: Seller, 
-                    as: 'seller' // Include seller details in the order items
-                }
-            ]
         });
 
-        // Extract order IDs from the fetched order items
         const orderIds = orderItems.map(orderItem => orderItem.orderId);
 
         // Fetch orders associated with the order IDs
@@ -47,8 +40,11 @@ exports.getAllOrdersForSeller = async (req, res) => {
                     model: OrderItem,
                     as: 'orderItems',
                     include: [
-                        { model: Seller, as: 'seller' } // Include seller details in the order items
-                    ]
+                        { model: Seller, as: 'seller' }
+                    ],
+                    where:{
+                        sellerId
+                    }
                 }
             ]
         });
