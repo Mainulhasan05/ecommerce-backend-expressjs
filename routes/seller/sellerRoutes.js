@@ -52,6 +52,7 @@ router.get('/dashboard',verifyToken,getDashboard);
 
 // order routes
 router.get('/orders', verifyToken, orderControllers.getAllOrdersForSeller);
+router.get('/order/:id', verifyToken, orderControllers.getSingleOrderDetails);
 
 
 

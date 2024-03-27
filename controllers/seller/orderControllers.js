@@ -35,21 +35,39 @@ exports.getAllOrdersForSeller = async (req, res) => {
         // Fetch orders associated with the order IDs
         const orders = await Order.findAll({
             where: { id: orderIds },
-            include: [
-                { 
-                    model: OrderItem,
-                    as: 'orderItems',
-                    include: [
-                        { model: Seller, as: 'seller' }
-                    ],
-                    where:{
-                        sellerId
-                    }
-                }
-            ]
         });
 
         return sendResponse(res, 200, true,'Orders fetched successfully', orders);
+    } catch (error) {
+        console.error('Error fetching orders for seller:', error);
+        return sendResponse(res, 500, error.message, null);
+    }
+};
+
+exports.getSingleOrderDetails = async (req, res) => {
+    const sellerId = req.id;
+    const orderId = req.params.id;
+
+    try {
+        const order= await Order.findOne({
+            where: { id: orderId },
+            include: [
+                {
+                    model: OrderItem,
+                    as: 'orderItems',
+                    where: { sellerId: sellerId },
+                    include: [
+                        {
+                            model: Product,
+                            as: 'product',
+                            attributes: ['name', 'new_price','image'],
+                        },
+                    ],
+                },
+            ],
+        });
+
+        return sendResponse(res, 200, true,'Orders fetched successfully', order);
     } catch (error) {
         console.error('Error fetching orders for seller:', error);
         return sendResponse(res, 500, error.message, null);
