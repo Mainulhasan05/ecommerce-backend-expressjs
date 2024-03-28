@@ -15,10 +15,10 @@ const createTransport = () => {
     
     const transporter = createTransport();
     const mailOptions = {
-        from: process.env.SENDER_EMAIL,
+        from:`"Suchona Mart" <${process.env.SENDER_EMAIL}>`,
         to: email,
         subject: subject,
-        text: body,
+        html: body,
     };
     await transporter.sendMail(mailOptions);
 };
