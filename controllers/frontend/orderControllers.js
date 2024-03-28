@@ -1,6 +1,7 @@
 const Order=require('../../models/common/orderModel');
 const OrderItem=require('../../models/common/orderItems');
 const Product=require('../../models/common/productModel');
+const Seller=require('../../models/seller/sellerModel');
 const {trackActivity}=require('../trackActivityController');
 const sendResponse=require('../../utils/sendResponse');
 const sendSMS = require('../../utils/sendSMS');
