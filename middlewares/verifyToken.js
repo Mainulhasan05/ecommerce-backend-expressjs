@@ -1,5 +1,14 @@
 const jwt=require('jsonwebtoken');
+const Seller=require('../models/seller/sellerModel');
 
+
+const updateLastSeen = async (sellerId) => {
+    try {
+        await Seller.findByIdAndUpdate(sellerId, { last_seen: new Date() });
+    } catch (err) {
+        console.error('Error updating last seen:', err);
+    }
+};
 const verifySellerToken=(req,res,next)=>{
     // check if it has token or it is not undefined
 
@@ -13,6 +22,8 @@ const verifySellerToken=(req,res,next)=>{
         
         const verified=jwt.verify(token,process.env.JWT_SECRET);
         req.id=verified.id;
+        updateLastSeen(verified.id);
+
         
         next();
     }catch(err){
