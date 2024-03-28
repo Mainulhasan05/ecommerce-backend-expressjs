@@ -113,7 +113,7 @@ exports.createOrder=async(req,res)=>{
             {
                 model: Seller,
                 as: 'seller',
-                attributes: ['id']
+                attributes: ['id','phone']
             }
         ]});
         // seller has a field phone, collect all phone numbers of sellers
