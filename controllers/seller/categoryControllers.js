@@ -18,10 +18,15 @@ const createCategory = async (req, res) => {
       slug=slug+"-"+time;
     }
 
-    if(req.file===undefined){
-        return sendResponse(res, 400, false, 'Please upload an image', null);
+    // if(req.file===undefined){
+    //     return sendResponse(res, 400, false, 'Please upload an image', null);
+    // }
+    // const image ="/uploads/categories/"+ req.file.filename;
+    // if there is image then set it otherwise do nothing
+    let image;
+    if(req.file){
+      image ="/uploads/categories/"+ req.file.filename;
     }
-    const image ="/uploads/categories/"+ req.file.filename;
     
     const createdBy = req.id; 
     const obj={}

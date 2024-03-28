@@ -22,7 +22,7 @@ const Category = sequelize.define('Category', {
     },
     image:{
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     sortValue: {
         type: DataTypes.INTEGER,

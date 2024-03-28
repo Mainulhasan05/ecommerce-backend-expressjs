@@ -2,6 +2,7 @@ const Seller = require('../../models/seller/sellerModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const {trackActivity}=require('../trackActivityController');
+const sendEmail = require('../../utils/sendEmail');
 const sendResponse=require('../../utils/sendResponse');
 
 
@@ -41,7 +42,13 @@ const sellerController = {
 
       const token = generateToken(seller);
       trackActivity(seller.id,`Seller: ${name} joined the platform`);
-
+      await sendEmail(process.env.SENDER_EMAIL,'New Seller Registration',
+      
+      `<h2>New Seller Registration</h2>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Phone:</strong> ${phone}</p>
+      <p><strong>Registered At:</strong> ${new Date().toLocaleString()}</p>
+      `);
       return sendResponse(res, 201,false, 'Seller created', { token });
     } catch (error) {
       console.error('Error creating seller:', error);
