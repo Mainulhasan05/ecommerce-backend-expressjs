@@ -4,6 +4,7 @@ const { Op } = require("sequelize");
 const {trackActivity}=require('../trackActivityController');
 const generateSlug = require('../../utils/generateSlug');
 const sendResponse = require('../../utils/sendResponse');
+const sendDomainEmail = require('../../utils/sendDomainEmail');
 
 const createShop = async (req, res) => {
     const { name, description,deliveryChargeInsideChapai,deliveryChargeOutsideChapai } = req.body;
@@ -26,6 +27,12 @@ const createShop = async (req, res) => {
         await seller.save();
         trackActivity(ownerId,`Created a shop with name ${name}`);
         sendResponse(res, 201,true,"Shop Created Successfully", shop);
+        sendDomainEmail(process.env.SENDER_EMAIL,'New Shop Created',`<h2>New Shop Created</h2>
+        <p><strong>Shop Name:</strong> ${name}</p>
+        <p><strong>Owner:</strong> ${seller.name}</p>
+        <p><strong>Created At:</strong> ${new Date().toLocaleString()}</p>
+        `);
+        
     } catch (error) {
         if(req.file){
             fs.unlink(req.file.path);
