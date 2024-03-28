@@ -14,11 +14,9 @@ const createTransport = () => {
 
 
 const sendDomainEmail = async (email,subject,body) => {
-    console.log('sending email')
-    console.log(email,subject,body)
-
+    
     const transporter = createTransport();
-    console.log(process.env.DOMAIN_EMAIL,process.env.DOMAIN_MAIL_PASS)
+    
     const mailOptions = {
         from:`"Suchona Mart" <${process.env.DOMAIN_EMAIL}>`,
         to: email,
