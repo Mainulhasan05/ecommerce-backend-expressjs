@@ -30,6 +30,7 @@ const  getDashboard=async(req,res)=>{
         // top 3 most views products of a seller
         const mostViewed=await Product.findAll({
             where:{sellerId:req.id},
+            attributes:['id','name','views','image','slug'],
             order:[['views','DESC']],
             limit:3
         });
