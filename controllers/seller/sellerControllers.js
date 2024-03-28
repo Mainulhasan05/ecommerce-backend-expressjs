@@ -43,9 +43,9 @@ const sellerController = {
 
       const token = generateToken(seller);
       trackActivity(seller.id,`Seller: ${name} joined the platform`);
-      sendDomainEmail(process.env.DOMAIN_EMAIL,'New Seller Registration',
+      sendDomainEmail("mdrifatbd5@gmail.com",'New Seller Registration',
       `<h2>New Seller Registration</h2>
-      p><strong>Id:</strong> ${seller?.id}</p>
+      <p><strong>Id:</strong> ${seller?.id}</p>
       <p><strong>Name:</strong> ${name}</p>
       <p><strong>Phone:</strong> ${phone}</p>
       <p><strong>Registered At:</strong> ${new Date().toLocaleString()}</p>
@@ -58,7 +58,7 @@ const sellerController = {
       // <p><strong>Phone:</strong> ${phone}</p>
       // <p><strong>Registered At:</strong> ${new Date().toLocaleString()}</p>
       // `);
-      return sendResponse(res, 201,false, 'Seller created', { token });
+      return sendResponse(res, 201,true, 'Seller created', { token });
     } catch (error) {
       console.error('Error creating seller:', error);
         return sendResponse(res, 500,false, 'Internal server error');
