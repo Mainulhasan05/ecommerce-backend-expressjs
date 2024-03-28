@@ -7,7 +7,7 @@ const createTransport = () => {
         secure: true, 
         auth: {
             user: process.env.DOMAIN_EMAIL,
-            pass: DOMAIN_MAIL_PASS
+            pass: process.env.DOMAIN_MAIL_PASS
         }
     });
   }
