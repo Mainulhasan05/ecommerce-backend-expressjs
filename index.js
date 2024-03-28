@@ -1,7 +1,8 @@
 
 const express = require('express');
-const cors = require('cors');
 require('dotenv').config();
+const cors = require('cors');
+
 const db=require('./db_config/db');
 const sellerRoutes=require('./routes/seller/sellerRoutes');
 const categoryRoutes=require('./routes/seller/categoryRoutes');
