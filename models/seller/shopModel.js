@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../db_config/db');
-
+const Seller=require('../seller/sellerModel');
 const Shop = sequelize.define('Shop', {
   name: {
     type: DataTypes.STRING,
@@ -60,5 +60,7 @@ const Shop = sequelize.define('Shop', {
   },
   
 });
+// one seller can have one shop
+Shop.belongsTo(Seller, { foreignKey: 'ownerId', as: 'owner' });
 
 module.exports = Shop;

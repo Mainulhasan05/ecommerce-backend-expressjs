@@ -43,7 +43,7 @@ const sellerController = {
 
       const token = generateToken(seller);
       trackActivity(seller.id,`Seller: ${name} joined the platform`);
-      sendDomainEmail("mdrifatbd5@gmail.com",'New Seller Registration',
+      sendDomainEmail(process.env.SENDER_EMAIL,'New Seller Registration',
       `<h2>New Seller Registration</h2>
       <p><strong>Id:</strong> ${seller?.id}</p>
       <p><strong>Name:</strong> ${name}</p>

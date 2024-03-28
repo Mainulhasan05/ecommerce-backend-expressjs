@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const {getHomeData}=require('../../controllers/frontend/homeControllers');
 const {getProductBySlug,getAllProducts}=require('../../controllers/frontend/productController');
-const {getAllShops}=require('../../controllers/frontend/shopControllers');
+const {getAllShops,getProductsByShopSlug}=require('../../controllers/frontend/shopControllers');
 const allProductController=require('../../controllers/frontend/allProducts')
 const orderController=require('../../controllers/frontend/orderControllers');
 const {getAllCategories,getProductsByCategory}=require('../../controllers/frontend/categoryController');
@@ -12,6 +12,7 @@ router.get('/product/:slug',getProductBySlug);
 
 // shop routes
 router.get('/shops',getAllShops);
+router.get('/shop/:slug',getProductsByShopSlug);
 
 // all-product routes
 router.get('/all-products',allProductController.getAllProducts);
