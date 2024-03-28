@@ -15,6 +15,7 @@ const getAllProducts = async (req, res) => {
             where: {
                 sellerId
             },
+            order: [['createdAt', 'DESC']],
             attributes: ['id', 'name', 'slug', 'image','old_price', 'new_price', 'views','quantity', 'status'],
             limit: 20,
         });

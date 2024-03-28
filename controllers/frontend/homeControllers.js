@@ -7,14 +7,14 @@ const sendResponse = require('../../utils/sendResponse');
 const getHomeData = async (req, res) => {
     const categories = await Category.findAll({
         attributes: ['id', 'name', 'slug', 'image', 'sortValue'],
-        include: [
-            {
-                model: Category,
-                as: 'children',
-                attributes: ['id', 'name', 'slug', 'image', 'sortValue'],
-                order: [[{ model: Category, as: 'children' }, 'sortValue', 'DESC']]
-            }
-        ],
+        // include: [
+        //     {
+        //         model: Category,
+        //         as: 'children',
+        //         attributes: ['id', 'name', 'slug', 'image', 'sortValue'],
+        //         order: [[{ model: Category, as: 'children' }, 'sortValue', 'DESC']]
+        //     }
+        // ],
         where: {
             parentId: null
         },
@@ -32,7 +32,7 @@ const getHomeData = async (req, res) => {
     const shops = await Shop.findAll({
         limit: 10,
         attributes: ['id', 'name', 'slug', 'image',],
-        order: [['createdAt', 'DESC']],
+        order: [['sortValue','DESC'],['createdAt', 'DESC']],
         where: {
             status: 'active'
         }

@@ -1,6 +1,12 @@
 const Activity=require('../../models/common/activityModel');
 const Seller=require('../../models/seller/sellerModel');
 const Product=require('../../models/common/productModel');
+const Order=require('../../models/common/orderModel');
+const Shop=require('../../models/seller/shopModel');
+const Category=require('../../models/common/categoryModel');
+const OrderItems=require('../../models/common/orderItems');
+const sequelize=require('sequelize');
+
 
 const sendResponse=require('../../utils/sendResponse');
 const {Op}=require('sequelize');
@@ -19,14 +25,33 @@ const  getDashboard=async(req,res)=>{
                 attributes:['name']
             }],
             order:[['createdAt','DESC']],
-            limit:10
+            limit:2
         });
-        // top 3 most views products
+        // top 3 most views products of a seller
+        const mostViewed=await Product.findAll({
+            where:{sellerId:req.id},
+            order:[['views','DESC']],
+            limit:3
+        });
+        
+
+        const totalOrders=await OrderItems.count({
+            where:{sellerId:req.id},
+            distinct:true,
+            col:'orderId'
+        })
+
+        
+        
+
+        // count total orders
+
+
         
         const data={
             activities,
-            // topProducts,
-            // topSellers
+            mostViewed,
+            totalOrders
         }
 
         sendResponse(res,200,true,'Dashboard data fetched successfully',data);

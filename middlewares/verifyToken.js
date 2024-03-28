@@ -4,13 +4,12 @@ const Seller=require('../models/seller/sellerModel');
 
 const updateLastSeen = async (sellerId) => {
     try {
-        await Seller.findByIdAndUpdate(sellerId, { last_seen: new Date() });
+        await Seller.update({ last_seen: new Date() }, { where: { id: sellerId } });
     } catch (err) {
         console.error('Error updating last seen:', err);
     }
 };
 const verifySellerToken=(req,res,next)=>{
-    // check if it has token or it is not undefined
 
     if(!req.header('authorization')) return res.status(401).send('Access Denied');
     // if undefined then return 401
