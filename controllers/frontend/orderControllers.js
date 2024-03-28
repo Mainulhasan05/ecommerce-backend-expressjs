@@ -3,6 +3,7 @@ const OrderItem=require('../../models/common/orderItems');
 const Product=require('../../models/common/productModel');
 const {trackActivity}=require('../trackActivityController');
 const sendResponse=require('../../utils/sendResponse');
+const sendSMS = require('../../utils/sendSMS');
 
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../db_config/db');
@@ -107,11 +108,23 @@ exports.createOrder=async(req,res)=>{
             return;
         }
         // check if all product ids are valid
-        const products = await Product.findAll({where: {id: productIds}});
+        const products = await Product.findAll({where: {id: productIds},include:[
+            {
+                model: Seller,
+                as: 'seller',
+                attributes: ['id']
+            }
+        ]});
+        // seller has a field phone, collect all phone numbers of sellers
+        const sellerPhones = products.map(product => product.seller.phone);
+        // make it unique
+        const uniqueSellerPhones = [...new Set(sellerPhones)];
+
         if (products.length !== productIds.length) {
             sendResponse(res,400,"Invalid Product Ids",null);
             return;
         }
+
         // calculate total amount
         let totalAmount = 0;
         for (let i = 0; i < products.length; i++) {
@@ -136,7 +149,10 @@ exports.createOrder=async(req,res)=>{
                 totalAmount: products[i].new_price * quantity[i]
             });
         }
-        
+        // send sms to all sellers
+        for (let i = 0; i < uniqueSellerPhones.length; i++) {
+            sendSMS(uniqueSellerPhones[i], `You have a new order from ${name}. Please check your dashboard for more details. \n -SuchonaMart`);
+        }
         // trackActivity(1, `Order Created: ${order.id}`);
         sendResponse(res,201,"Order Created",order);
     }
