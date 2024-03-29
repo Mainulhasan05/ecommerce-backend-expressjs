@@ -11,13 +11,13 @@ const path = require('path');
 // Create a new category
 const createCategory = async (req, res) => {
   try {
-    const { name, description,  parentId,sortValue,isFeatured,sideMenu } = req.body;
-    let slug=generateSlug(name);
+    const { name, description, parentId, sortValue, isFeatured, sideMenu } = req.body;
+    let slug = generateSlug(name);
     // check if the category already exists of same slug, if have then add time
     const categorySlug = await Category.findOne({ where: { slug } });
-    if(categorySlug){
+    if (categorySlug) {
       const time = new Date().getTime();
-      slug=slug+"-"+time;
+      slug = slug + "-" + time;
     }
 
     // if(req.file===undefined){
@@ -26,33 +26,33 @@ const createCategory = async (req, res) => {
     // const image ="/uploads/categories/"+ req.file.filename;
     // if there is image then set it otherwise do nothing
     let image;
-    if(req.file){
-      image ="/uploads/categories/"+ req.file.filename;
+    if (req.file) {
+      image = "/uploads/categories/" + req.file.filename;
     }
-    
-    const createdBy = req.id; 
-    const obj={}
-    if(name){
-      obj.name=name;
+
+    const createdBy = req.id;
+    const obj = {}
+    if (name) {
+      obj.name = name;
     }
-    if(description){
-      obj.description=description;
+    if (description) {
+      obj.description = description;
     }
-    if(parentId){
-      obj.parentId=parentId;
+    if (parentId) {
+      obj.parentId = parentId;
     }
-    if(sortValue){
-      obj.sortValue=sortValue;
+    if (sortValue) {
+      obj.sortValue = sortValue;
     }
-    if(isFeatured){
-      obj.isFeatured=isFeatured;
+    if (isFeatured) {
+      obj.isFeatured = isFeatured;
     }
-    if(sideMenu){
-      obj.sideMenu=sideMenu;
+    if (sideMenu) {
+      obj.sideMenu = sideMenu;
     }
-    obj.slug=slug;
-    obj.image=image;
-    obj.createdBy=createdBy;
+    obj.slug = slug;
+    obj.image = image;
+    obj.createdBy = createdBy;
 
 
     const category = await Category.create(obj);
@@ -76,13 +76,13 @@ const getAllCategories = async (req, res) => {
         {
           model: Category,
           as: 'children',
-          attributes: ['id', 'name', 'slug','createdAt'],
+          attributes: ['id', 'name', 'slug', 'createdAt'],
           order: [[{ model: Category, as: 'children' }, 'createdAt', 'DESC']]
         }
       ],
-      order: [[{model: Category, as: 'children'}, 'createdAt', 'DESC']],
-        offset: 10 * page,
-        limit: limit,
+      order: [[{ model: Category, as: 'children' }, 'createdAt', 'DESC']],
+      offset: 10 * page,
+      limit: limit,
     });
     sendResponse(res, 200, true, 'Categories retrieved successfully', categories);
   } catch (error) {
@@ -111,54 +111,62 @@ const getCategoryById = async (req, res) => {
 const updateCategoryById = async (req, res) => {
   const { id } = req.params;
   try {
-    const { name, description,  parentId,sortValue,isFeatured,sideMenu } = req.body;
-    
+    const { name, description, parentId, sortValue, isFeatured, sideMenu } = req.body;
+
     let image;
-    if(req.file){
-      image ="/uploads/categories/"+ req.file.filename;
+    if (req.file) {
+      image = "/uploads/categories/" + req.file.filename;
     }
     const updatedBy = req.id;
     const category = await Category.findByPk(id);
+    let slug;
+    // if names are same then do not change slug
+    if (name === category.name) {
+      slug = category.slug;
+    } else {
+      slug = generateSlug(name);
+      const exists = await Category.findOne({ where: { slug } });
+      if (exists) {
+        const time = new Date().getTime();
+        slug = slug + "-" + time;
+      }
+    }
     if (!category) {
       return sendResponse(res, 404, false, 'Category not found', null);
     }
-    const slug=generateSlug(name);
+
     // check if the category already exists of same slug, if have then add time
-    const exists = await Category.findOne({ where: { slug } });
-    if(exists){
-      const time = new Date().getTime();
-      slug=slug+"-"+time;
+
+    const obj = {}
+
+    if (name) {
+      obj.name = name;
     }
-    const obj={}
-    
-    if(name){
-      obj.name=name;
+    if (slug) {
+      obj.slug = slug;
     }
-    if(slug){
-      obj.slug=slug;
+    if (description) {
+      obj.description = description;
     }
-    if(description){
-      obj.description=description;
+    if (parentId && parentId != null) {
+      obj.parentId = parentId;
     }
-    if(parentId && parentId!=null){
-      obj.parentId=parentId;
+    if (sortValue) {
+      obj.sortValue = sortValue;
     }
-    if(sortValue){
-      obj.sortValue=sortValue;
+    if (isFeatured) {
+      obj.isFeatured = isFeatured;
     }
-    if(isFeatured){
-      obj.isFeatured=isFeatured;
+    if (sideMenu) {
+      obj.sideMenu = sideMenu;
     }
-    if(sideMenu){
-      obj.sideMenu=sideMenu;
-    }
-    if(image){
+    if (image) {
       if (category.image) {
         deleteImage(category.image);
       }
-      obj.image=image;
+      obj.image = image;
     }
-    obj.updatedBy=updatedBy;
+    obj.updatedBy = updatedBy;
     const updatedCategory = await category.update(obj);
     sendResponse(res, 200, true, 'Category updated successfully', updatedCategory);
   } catch (error) {
@@ -185,16 +193,16 @@ const deleteCategoryById = async (req, res) => {
     if (category.products.length > 0) {
       return sendResponse(res, 400, false, 'Cannot delete category with associated products', null);
     }
-    
-    
-    if (category.image) {
-      
 
-      const imagePath = path.join(__dirname,"../../",category.image);
-      
-      
+
+    if (category.image) {
+
+
+      const imagePath = path.join(__dirname, "../../", category.image);
+
+
       if (fs.existsSync(imagePath)) {
-        
+
         fs.unlinkSync(imagePath);
       }
     }
@@ -215,7 +223,7 @@ const deleteCategoryById = async (req, res) => {
 const getParentCategories = async (req, res) => {
   try {
     const categories = await Category.findAll({
-      attributes: ['id', 'name', 'slug', ],
+      attributes: ['id', 'name', 'slug',],
       where: {
         parentId: null,
       },
