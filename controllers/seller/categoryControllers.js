@@ -120,9 +120,20 @@ const updateCategoryById = async (req, res) => {
     if (!category) {
       return sendResponse(res, 404, false, 'Category not found', null);
     }
+    const slug=generateSlug(name);
+    // check if the category already exists of same slug, if have then add time
+    const exists = await Category.findOne({ where: { slug } });
+    if(exists){
+      const time = new Date().getTime();
+      slug=slug+"-"+time;
+    }
     const obj={}
+    
     if(name){
       obj.name=name;
+    }
+    if(slug){
+      obj.slug=slug;
     }
     if(description){
       obj.description=description;
