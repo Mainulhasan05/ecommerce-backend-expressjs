@@ -1,4 +1,6 @@
 const Category = require('../../models/common/categoryModel');
+const Product = require('../../models/common/productModel');
+
 const sendResponse = require('../../utils/sendResponse');
 const generateSlug = require('../../utils/generateSlug');
 const deleteImage = require('../../utils/deleteImage');
@@ -169,18 +171,27 @@ const updateCategoryById = async (req, res) => {
 const deleteCategoryById = async (req, res) => {
   const { id } = req.params;
   try {
-    // Retrieve the category from the database to get the image file name
-    const category = await Category.findByPk(id);
+    const category = await Category.findByPk(id, {
+      include: [{
+        model: Product,
+        as: 'products',
+        attributes: ['id'],
+      }]
+    });
+
     if (!category) {
       return sendResponse(res, 404, false, 'Category not found', null);
     }
-
-    // Check if the category has an image
+    if (category.products.length > 0) {
+      return sendResponse(res, 400, false, 'Cannot delete category with associated products', null);
+    }
+    
+    
     if (category.image) {
       
 
       const imagePath = path.join(__dirname,"../../",category.image);
-      console.log(imagePath)
+      
       
       if (fs.existsSync(imagePath)) {
         
