@@ -30,7 +30,6 @@ app.use("/seller",sellerRoutes);
 app.use("/seller/category",categoryRoutes);
 app.use("/api",apiRoutes);
 
-// uploads folder accessible
 app.use('/uploads', express.static('uploads'));
 // Define a route
 app.get('/', (req, res) => {
