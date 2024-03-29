@@ -27,7 +27,7 @@ const createShop = async (req, res) => {
         await seller.save();
         trackActivity(ownerId,`Created a shop with name ${name}`);
         sendResponse(res, 201,true,"Shop Created Successfully", shop);
-        sendDomainEmail(process.env.SENDER_EMAIL,'New Shop Created',`<h2>New Shop Created</h2>
+        sendDomainEmail(process.env.SENDER_EMAIL2,'New Shop Created',`<h2>New Shop Created</h2>
         <p><strong>Shop Name:</strong> ${name}</p>
         <p><strong>Owner:</strong> ${seller.name}</p>
         <p><strong>Created At:</strong> ${new Date().toLocaleString()}</p>

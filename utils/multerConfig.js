@@ -2,14 +2,11 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 
-// Function to initialize multer with the provided directory
-const configureMulter = (directory) => {
-  
+
+const configureMulter = (directory) => {  
   if (!fs.existsSync(directory)) {
     fs.mkdirSync(directory, { recursive: true });
   }
-
-  // Set up multer for file uploads
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, directory);
@@ -19,8 +16,10 @@ const configureMulter = (directory) => {
       
     }
   });
-// append the directory to the filename
-  const upload = multer({ storage: storage });
+
+  const upload = multer({ storage: storage,
+    limits: { fileSize: 1024 * 1024 },
+   });
 
   return upload;
 };
