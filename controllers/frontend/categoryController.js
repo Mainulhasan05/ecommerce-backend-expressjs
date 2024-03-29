@@ -12,7 +12,7 @@ const getProductsByCategory = async (req, res) => {
         const limit = parseInt(req.query.limit, 20) || 20;
         const priceRange = req.query.priceRange || "0-100000";
         const price = req.query.price || "asc";
-
+        
         let query = {};
         if (priceRange) {
             const priceArr = priceRange.split("-");
@@ -33,6 +33,7 @@ const getProductsByCategory = async (req, res) => {
         if(price === "desc"){
             sortQuery.push(['new_price', 'DESC']);
         }
+        
         const category = await Category.findOne({
             where: { slug },
             attributes: ['id', 'name', 'slug', 'image','description',],
@@ -43,14 +44,12 @@ const getProductsByCategory = async (req, res) => {
                     through: { attributes: [] },
                     attributes: ['id', 'name', 'new_price', 'old_price', 'slug', 'image','createdAt'],
                     where: query,
-                    order: sortQuery,            
+                    order: sortQuery,
+                    required:false            
                 }
             ]
         });
-        // totalPages,
-        // totalProducts,
-        // currentPage: page,
-        // per_page: limit
+        
         const totalProducts=await Product.count({
             include: [
                 {
@@ -65,7 +64,7 @@ const getProductsByCategory = async (req, res) => {
         const totalPages=Math.ceil(totalProducts/limit);
         
         if (!category) {
-            return sendResponse(res, 404, false, 'Category not found');
+            return sendResponse(res, 404, false, 'Category not found',);
         }
         sendResponse(res, 200, true, 'Products fetched successfully', {
             category,totalPages,
@@ -75,6 +74,7 @@ const getProductsByCategory = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
+        
         sendResponse(res, 500, false, error.message,error);
     }
 };
