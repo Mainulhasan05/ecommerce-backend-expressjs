@@ -32,9 +32,10 @@ const notifySeller=async (sellerId,productName)=>{
     const seller=await Seller.findByPk(sellerId);
     if(seller){
         
-        sendDomainEmail(process.env.SENDER_EMAIL2,'New Order Notification',
-        `<h2>New Order Notification</h2>
+        sendDomainEmail(process.env.SENDER_EMAIL2,'New Product Upload',
+        `<h2>New Product Notification</h2>
         <p><strong>Product:</strong> ${productName}</p>
+        <p><strong>Seller:</strong> ${seller.name}</p>
         <p><strong>Ordered At:</strong> ${new Date().toLocaleString()}</p>
         `);
     }
