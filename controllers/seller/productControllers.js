@@ -3,10 +3,12 @@ const ProductImage = require('../../models/common/product_helpers/productImagesM
 const Category=require('../../models/common/categoryModel');
 const Shop=require('../../models/seller/shopModel');
 const OrderItem=require('../../models/common/orderItems');
+const Seller=require('../../models/seller/sellerModel');
 const {trackActivity}=require('../trackActivityController');
 const sendResponse = require('../../utils/sendResponse');
 const deleteImage = require('../../utils/deleteImage');
 const generateSlug = require('../../utils/generateSlug');
+const sendDomainEmail = require('../../utils/sendDomainEmail');
 
 const getAllProducts = async (req, res) => {
     try {
@@ -26,7 +28,17 @@ const getAllProducts = async (req, res) => {
         sendResponse(res, 500, false, error.message);
     }
 };
-
+const notifySeller=async (sellerId,productName)=>{
+    const seller=await Seller.findByPk(sellerId);
+    if(seller){
+        
+        sendDomainEmail(process.env.SENDER_EMAIL2,'New Order Notification',
+        `<h2>New Order Notification</h2>
+        <p><strong>Product:</strong> ${productName}</p>
+        <p><strong>Ordered At:</strong> ${new Date().toLocaleString()}</p>
+        `);
+    }
+}
 const createProduct = async (req, res) => {
     try {
         const { name, description, old_price, new_price, categoryIds, quantity,status } = req.body;
@@ -97,6 +109,7 @@ const createProduct = async (req, res) => {
             
         }
         await Shop.update({productCount:shop.productCount+1},{where:{id:shop.id}});
+        notifySeller(sellerId,product.name);
         sendResponse(res, 201, true, 'Product created successfully', {
             id: product.id,
             name: product.name,
@@ -116,6 +129,8 @@ const createProduct = async (req, res) => {
         sendResponse(res, 500, false, error.message,error);
     }
 };
+
+
 
 const getProductById = async (req, res) => {
     try {

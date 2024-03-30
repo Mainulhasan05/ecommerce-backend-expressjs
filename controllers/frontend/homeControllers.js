@@ -23,7 +23,7 @@ const getHomeData = async (req, res) => {
     });
     const featuredCategories = await Category.findAll({
         attributes: ['id', 'name', 'slug', 'image'],
-        limit: 10,
+        limit: 18,
         order: [['sortValue', 'DESC']],
         where: {
             isFeatured: true

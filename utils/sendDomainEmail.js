@@ -18,7 +18,7 @@ const sendDomainEmail = async (email,subject,body) => {
     const transporter = createTransport();
     
     const mailOptions = {
-        from:`"Suchona Mart" <${process.env.DOMAIN_EMAIL}>`,
+        from:`"SuchonaMart" <${process.env.DOMAIN_EMAIL}>`,
         to: email,
         subject: subject,
         html: body,

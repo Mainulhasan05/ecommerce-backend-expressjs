@@ -9,4 +9,5 @@ const generateSlug = (name) => {
     return slugify(bengaliSlug, { lower: true });
 }
 
+
 module.exports = generateSlug;
