@@ -2,14 +2,17 @@ const Category = require('../../models/common/categoryModel');
 const Shop = require('../../models/seller/shopModel');
 const Product = require('../../models/common/productModel');
 const Banner =require('../../models/common/bannerModel');
+const { Op } = require('sequelize');
 
 const sendResponse = require('../../utils/sendResponse');
 const getHomeData = async (req, res) => {
     const categories = await Category.findAll({
         attributes: ['id', 'name', 'slug', 'image', 'sortValue'],
         where: {
-            parentId: null,
-            isFeatured: true
+            [Op.or]: {
+                parentId: null,
+                isFeatured: true
+              },
         },
         limit: 10,
         order: [['sortValue', 'DESC']]
