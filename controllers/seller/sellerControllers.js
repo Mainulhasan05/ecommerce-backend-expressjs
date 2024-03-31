@@ -109,6 +109,19 @@ const sellerController = {
       console.error('Error fetching seller profile:', error);
       sendResponse(res, 500, false,'Internal server error');
     }
+  },
+  getRecentlyActiveSellers: async (req, res) => {
+    try {
+      const sellers = await Seller.findAll({
+        attributes: ['id', 'name', 'last_seen'],
+        order: [['last_seen', 'DESC']],
+        limit: 10
+      });
+      sendResponse(res, 200, true, 'Recently active sellers retrieved successfully', sellers);
+    } catch (error) {
+      console.error('Error fetching recently active sellers:', error);
+      sendResponse(res, 500, false,'Internal server error');
+    }
   }
 };
 

@@ -95,7 +95,7 @@ const getAllCategories = async (req, res) => {
             where: {
                 parentId: null
             },
-            limit: 10,
+            limit: 100,
             order: [['sortValue', 'DESC']]
         });
         sendResponse(res, 200, true, 'Categories retrieved successfully', categories);

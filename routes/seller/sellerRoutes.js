@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { register, login, getProfile } = require('../../controllers/seller/sellerControllers');
+const { register, login, getProfile,getRecentlyActiveSellers } = require('../../controllers/seller/sellerControllers');
 const { addBanner, getBanners, updateBanner, deleteBanner } = require('../../controllers/seller/bannerControllers');
 const { createShop, getMyShop, getShop, deleteShop, updateShop, getShops } = require('../../controllers/seller/shopControllers');
 const { getAllProducts,
@@ -20,7 +20,7 @@ const verifyToken = require('../../middlewares/verifyToken');
 router.post('/register', register);
 router.post('/login', login);
 router.get('/profile', verifyToken, getProfile);
-
+router.get('/get', getRecentlyActiveSellers);
 // banner routes
 router.post('/banner', verifyToken, require('../../utils/multerConfig')('uploads/banner').single('image'), addBanner);
 router.get('/banner', getBanners);
