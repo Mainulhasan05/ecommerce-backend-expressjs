@@ -11,7 +11,7 @@ const getHomeData = async (req, res) => {
         where: {
             [Op.or]: {
                 parentId: null,
-                isFeatured: true
+                sideMenu: true
               },
         },
         limit: 10,
