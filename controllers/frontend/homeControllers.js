@@ -7,16 +7,9 @@ const sendResponse = require('../../utils/sendResponse');
 const getHomeData = async (req, res) => {
     const categories = await Category.findAll({
         attributes: ['id', 'name', 'slug', 'image', 'sortValue'],
-        // include: [
-        //     {
-        //         model: Category,
-        //         as: 'children',
-        //         attributes: ['id', 'name', 'slug', 'image', 'sortValue'],
-        //         order: [[{ model: Category, as: 'children' }, 'sortValue', 'DESC']]
-        //     }
-        // ],
         where: {
-            parentId: null
+            parentId: null,
+            isFeatured: true
         },
         limit: 10,
         order: [['sortValue', 'DESC']]
